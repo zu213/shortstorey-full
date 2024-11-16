@@ -25,7 +25,7 @@ server.get<{ Body: User; Params: { id: string } }>("/user/:id", async (req, repl
 });
 
 server.post<{ Body: User }>("/user/create/", async (req, reply) => {
-
+  console.log(req.body)
   try {
     const createdUserData = await Prisma.user.create({ data: req.body });
     reply.send(createdUserData);
@@ -73,9 +73,10 @@ server.get<{ Body: Story; Params: { id: string } }>("/story/:id", async (req, re
 });
 
 server.post<{ Body: Story }>("/story/create/", async (req, reply) => {
-
+  let updatedEntryBody = req.body;
+  updatedEntryBody.created_at = new Date()
   try {
-    const createdStoryData = await Prisma.story.create({ data: req.body });
+    const createdStoryData = await Prisma.story.create({ data: updatedEntryBody });
     reply.send(createdStoryData);
   } catch {
     reply.status(500).send({ msg: "Error creating Story" });
