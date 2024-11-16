@@ -4,11 +4,12 @@ import 'jest-expect-message';
 
 var created_users: Return_User[] = [];
 var created_stories: Return_Story[] = []
+var created_ratings: Return_Rating[] = []
 
 type Rating = {
   actual_score:number
   user_id:string
-  story_id:string
+  to_story_id:string
 }
 
 type Story = {
@@ -26,6 +27,10 @@ type Return_User = {
 }
 
 type Return_Story = {
+  id: string
+}
+
+type Return_Rating = {
   id: string
 }
 
@@ -62,11 +67,21 @@ async function cleanDatabase() {
   await Prisma.user.deleteMany({})
 }
 
+async function printDatabase() {
+  const ratings = await Prisma.rating.findMany({})
+  console.log('Ratings: ',ratings)
+  const stories = await Prisma.story.findMany({})
+  console.log('Stories: ', stories)
+  const users = await Prisma.user.findMany({})
+  console.log('Users: ', users)
+}
+
 beforeAll(async () => {
   await server.ready();
 });
 
 afterAll(async () => {
+  await printDatabase();
   await cleanDatabase();
   await server.close();
   await Prisma.$disconnect;
@@ -128,7 +143,7 @@ test("Simulated database example, add user and scores update", async () => {
     expect(response.statusCode, 'Failed at stories').toEqual(200);
     
     const body = JSON.parse(response.body);
-    created_stories.push(body.id);
+    created_stories.push(body);
 
   }
 
@@ -137,7 +152,7 @@ test("Simulated database example, add user and scores update", async () => {
     const request:Rating = {
       actual_score: i,
       user_id: created_users[i].id,
-      story_id: created_stories[0].id
+      to_story_id: created_stories[0].id
     };
 
     const response = await server.inject({
@@ -148,8 +163,35 @@ test("Simulated database example, add user and scores update", async () => {
     expect(response.statusCode, 'Failed at ratings').toEqual(200);
     
     const body = JSON.parse(response.body);
-    created_stories.push(body.id);
+    created_ratings.push(body);
 
   }
+
+    // Now give some ratings after people have recieved ratings
+    for(var i = 0; i < 4; i++){
+      if(i == 1){
+        continue
+      }
+      const request:Rating = {
+        actual_score: i,
+        user_id: created_users[i].id,
+        to_story_id: created_stories[2].id
+      };
+  
+      const response = await server.inject({
+        method: "POST",
+        url: "/rating/create/",
+        payload: request,
+      });
+      expect(response.statusCode, 'Failed at ratings2').toEqual(200);
+      
+      const body = JSON.parse(response.body);
+      created_ratings.push(body);
+  
+    }
+
+
+
+
 
 });
