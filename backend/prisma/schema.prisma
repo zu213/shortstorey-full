@@ -12,7 +12,7 @@ datasource db {
 
 model User {
   id          String   @id @default(uuid())
-  title       String
+  name       String
   rating      Float?
   stories     Story[]
 }

@@ -32,5 +32,8 @@
     "setupFilesAfterEnv": [
       "jest-expect-message"
     ]
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   }
 }
