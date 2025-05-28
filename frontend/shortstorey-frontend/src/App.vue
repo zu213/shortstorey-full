@@ -1,15 +1,15 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <img alt="Vue logo" class="logo" src="./assets/logo.png">
+  <StoryDisplay />
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import StoryDisplay from './components/StoryDisplay.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    StoryDisplay
   }
 }
 </script>
@@ -22,5 +22,11 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+.logo {
+  max-width: 200px;
+  height: 40vh;
+  width: 40vh;
+  aspect-ratio: 1;
 }
 </style>

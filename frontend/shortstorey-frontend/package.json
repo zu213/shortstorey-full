@@ -1,5 +1,5 @@
 {
-  "name": "hello-vue-app",
+  "name": "shortstorey-frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -39,5 +39,9 @@
     "last 2 versions",
     "not dead",
     "not ie 11"
-  ]
+  ],
+  "parserOptions": {
+      "parser": "@babel/eslint-parser",
+      "requireConfigFile": false
+  }
 }

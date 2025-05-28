@@ -35,11 +35,11 @@ type Return_Rating = {
 }
 
 async function createUser(
-  title = "Placeholder",
+  name = "Placeholder",
 ) {
   const user = await Prisma.user.create({
     data: {
-      title,
+      name,
     },
   });
   created_users.push(user);
