@@ -18,6 +18,11 @@ export default {
       stories: []
     }
   },
+  computed: {
+    currentUser() {
+      return localStorage.getItem('username')
+    }
+  },
   async mounted() {
     this.stories = await getStories('')
     console.log(this.stories)

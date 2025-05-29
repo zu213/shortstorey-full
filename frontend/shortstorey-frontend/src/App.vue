@@ -1,16 +1,12 @@
 <template>
   <img alt="Vue logo" class="logo" src="./assets/logo.png">
-  <StoryDisplay />
+  <router-view />
 </template>
 
 <script>
-import StoryDisplay from './components/StoryDisplay.vue'
 
 export default {
-  name: 'App',
-  components: {
-    StoryDisplay
-  }
+  name: 'App'
 }
 </script>
 
