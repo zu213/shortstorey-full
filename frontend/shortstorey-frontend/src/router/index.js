@@ -2,12 +2,32 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginPage from '@/components/LoginPage.vue'
 import StoryDisplay from '@/components/StoryDisplay.vue'
+import StoryContent from '@/components/StoryContent.vue'
+import ProfilePage from '@/components/ProfilePage.vue'
+import CreateStory from '@/components/CreateStory.vue'
+import { useAuthStore } from '@/store/auth'
 
 const routes = [
     { 
         path: '/',
         name: 'Stories',
         component: StoryDisplay,
+    },
+    {
+        path: '/readstory/:id',
+        name: 'Story',
+        component: StoryContent,
+    },
+    {
+        path: '/scribe',
+        name: 'CreateStory',
+        component: CreateStory,
+        meta: { loggedIn: true }
+    },
+    {
+        path: '/profile',
+        name: 'ProfilePage',
+        component: ProfilePage,
         meta: { requiresAuth: true }
     },
     { path: '/login', name: 'Login', component: LoginPage },
@@ -19,7 +39,8 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = !!localStorage.getItem('token') // Check for token
+    const auth = useAuthStore()
+  const isAuthenticated = auth.isAuthenticated // Check for token
   if (to.meta.requiresAuth && !isAuthenticated) {
     next({ name: 'Login' })
   } else {

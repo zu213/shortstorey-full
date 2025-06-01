@@ -2,11 +2,15 @@
   <div class="storyContainer">
     <ul>
       <li v-for="(story, i) in stories" :key="i">
-        {{ story }}
+        <StoryCard :story="story" />
       </li>
     </ul>
   </div>
 </template>
+
+<script setup>
+  import StoryCard from './StoryCard.vue'
+</script>
 
 <script>
 import { getStories } from '../bridge/bridge.js'
@@ -23,9 +27,8 @@ export default {
       return localStorage.getItem('username')
     }
   },
-  async mounted() {
+  async created() {
     this.stories = await getStories('')
-    console.log(this.stories)
   },
   props: {
     params: String

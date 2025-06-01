@@ -97,7 +97,7 @@ test("Simulated database example, add user and scores update", async () => {
 
     const response = await server.inject({
       method: "POST",
-      url: "/user/create/",
+      url: "/user/create",
       payload: request,
     });
     expect(response.statusCode, 'Failed at users').toEqual(200);
@@ -116,7 +116,7 @@ test("Simulated database example, add user and scores update", async () => {
 
     const response = await server.inject({
       method: "POST",
-      url: "/story/create/",
+      url: "/stories/create",
       payload: request,
     });
     console.log(response)
@@ -137,7 +137,7 @@ test("Simulated database example, add user and scores update", async () => {
 
     const response = await server.inject({
       method: "POST",
-      url: "/story/create/",
+      url: "/stories/create",
       payload: request,
     });
     expect(response.statusCode, 'Failed at stories').toEqual(200);
@@ -157,7 +157,7 @@ test("Simulated database example, add user and scores update", async () => {
 
     const response = await server.inject({
       method: "POST",
-      url: "/rating/create/",
+      url: "/rating/create",
       payload: request,
     });
     expect(response.statusCode, 'Failed at ratings').toEqual(200);
@@ -180,7 +180,7 @@ test("Simulated database example, add user and scores update", async () => {
   
       const response = await server.inject({
         method: "POST",
-        url: "/rating/create/",
+        url: "/rating/create",
         payload: request,
       });
       expect(response.statusCode, 'Failed at ratings2').toEqual(200);

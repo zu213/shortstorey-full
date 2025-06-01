@@ -1,12 +1,17 @@
 <template>
+  <TopBar />  
   <img alt="Vue logo" class="logo" src="./assets/logo.png">
   <router-view />
 </template>
 
 <script>
+import TopBar from './components/TopBar.vue'
 
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    TopBar
+  }
 }
 </script>
 

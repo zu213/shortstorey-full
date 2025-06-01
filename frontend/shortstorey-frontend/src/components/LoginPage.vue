@@ -10,25 +10,30 @@
 </template>
 
 <script>
-    export default {
-        name: 'LoginPage',
-        data() {
-            return {
+import { useAuthStore } from '@/store/auth'
+
+export default {
+    name: 'LoginPage',
+    data() {
+        return {
             username: '',
-            password: ''
-            }
-        },
-        methods: {
-            login() {
-            // Mock login logic
-            if (this.username === 'admin' && this.password === 'password') {
-                localStorage.setItem('token', 'mock-token')
-                localStorage.setItem('username', this.username)
-                this.$router.push({ name: 'Stories' })
-            } else {
-                alert('Invalid credentials')
-            }
-            }
+            password: '',
+            auth: null,
+        }
+    },
+    created() {
+        this.auth = useAuthStore()
+    },
+    methods: {
+        login() {
+        // Mock login logic
+        if (this.username === 'admin' && this.password === 'password') {
+            this.auth.logIn('mock')
+            this.$router.push({ name: 'Stories' })
+        } else {
+            alert('Invalid credentials')
+        }
         }
     }
+}
 </script>

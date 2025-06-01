@@ -9,7 +9,7 @@ server.register(cors, {});
 
 
 // User endpoints
-server.get<{ Reply: User[] }>("/user/", async (req, reply) => {
+server.get<{ Reply: User[] }>("/user", async (req, reply) => {
   const dbAllEntries = await Prisma.user.findMany({});
   reply.send(dbAllEntries);
 });
@@ -24,7 +24,7 @@ server.get<{ Body: User, Params: { id: string } }>("/user/:id", async (req, repl
   reply.send(dbEntry);
 });
 
-server.post<{ Body: User }>("/user/create/", async (req, reply) => {
+server.post<{ Body: User }>("/user/create", async (req, reply) => {
   console.log(req.body)
   try {
     const createdUserData = await Prisma.user.create({ data: req.body });
@@ -57,12 +57,12 @@ server.put<{ Params: { id: string }; Body: User }>("/user/update/:id", async (re
 });
 
 // Story endpoints
-server.get<{ Reply: Story[] }>("/story/", async (req, reply) => {
+server.get<{ Reply: Story[] }>("/stories", async (req, reply) => {
   const dbAllEntries = await Prisma.story.findMany({});
   reply.send(dbAllEntries);
 });
 
-server.get<{ Body: Story; Params: { id: string } }>("/story/:id", async (req, reply) => {
+server.get<{ Body: Story; Params: { id: string } }>("/stories/:id", async (req, reply) => {
   const dbEntry = await Prisma.story.findUnique({
     where: { id: req.params.id },
   });
@@ -72,7 +72,7 @@ server.get<{ Body: Story; Params: { id: string } }>("/story/:id", async (req, re
   reply.send(dbEntry);
 });
 
-server.post<{ Body: Story }>("/story/create/", async (req, reply) => {
+server.post<{ Body: Story }>("/stories/create", async (req, reply) => {
   let updatedEntryBody = req.body;
   updatedEntryBody.created_at = new Date()
   try {
@@ -83,7 +83,7 @@ server.post<{ Body: Story }>("/story/create/", async (req, reply) => {
   }
 });
 
-server.delete<{ Params: { id: string } }>("/story/delete/:id", async (req, reply) => {
+server.delete<{ Params: { id: string } }>("/stories/delete/:id", async (req, reply) => {
   try {
     await Prisma.story.delete({ where: { id: req.params.id } });
     reply.send({ msg: "Deleted successfully" });
@@ -92,7 +92,7 @@ server.delete<{ Params: { id: string } }>("/story/delete/:id", async (req, reply
   }
 });
 
-server.put<{ Params: { id: string }; Body: Story }>("/story/update/:id", async (req, reply) => {
+server.put<{ Params: { id: string }; Body: Story }>("/stories/update/:id", async (req, reply) => {
   try {
     await Prisma.story.update({
       data: req.body,
@@ -106,7 +106,7 @@ server.put<{ Params: { id: string }; Body: Story }>("/story/update/:id", async (
 
 
 // Rating endpoints
-server.get<{ Reply: Rating[] }>("/rating/", async (req, reply) => {
+server.get<{ Reply: Rating[] }>("/rating", async (req, reply) => {
   const dbAllEntries = await Prisma.rating.findMany({});
   reply.send(dbAllEntries);
 });
@@ -121,7 +121,7 @@ server.get<{ Body: Rating, Params: { id: string } }>("/rating/:id", async (req, 
   reply.send(dbEntry);
 });
 
-server.post<{ Body: Rating }>("/rating/create/", async (req, reply) => {
+server.post<{ Body: Rating }>("/rating/create", async (req, reply) => {
   let updatedEntryBody = req.body;
 
   if(updatedEntryBody.actual_score < 0 || updatedEntryBody.actual_score > 5){
