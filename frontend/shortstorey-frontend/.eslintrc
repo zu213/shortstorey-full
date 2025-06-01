@@ -9,6 +9,6 @@
       "eslint:recommended"
     ],
     "rules": {
-      // your rules here
+      "indent": ["error", 2]
     }
   }

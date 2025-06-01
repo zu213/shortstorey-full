@@ -22,12 +22,12 @@ export default {
     }
   },
   created() {
-        this.auth = useAuthStore()
+    this.auth = useAuthStore()
   },  
   computed: {
-      isAuthenticated() {
-            return this.auth.isAuthenticated
-      }
+    isAuthenticated() {
+      return this.auth.isAuthenticated
+    }
   }
 }
 </script>

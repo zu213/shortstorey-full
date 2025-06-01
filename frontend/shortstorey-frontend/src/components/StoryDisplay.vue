@@ -9,7 +9,7 @@
 </template>
 
 <script setup>
-  import StoryCard from './StoryCard.vue'
+import StoryCard from './StoryCard.vue'
 </script>
 
 <script>

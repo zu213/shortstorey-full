@@ -8,29 +8,29 @@ import CreateStory from '@/components/CreateStory.vue'
 import { useAuthStore } from '@/store/auth'
 
 const routes = [
-    { 
-        path: '/',
-        name: 'Stories',
-        component: StoryDisplay,
-    },
-    {
-        path: '/readstory/:id',
-        name: 'Story',
-        component: StoryContent,
-    },
-    {
-        path: '/scribe',
-        name: 'CreateStory',
-        component: CreateStory,
-        meta: { loggedIn: true }
-    },
-    {
-        path: '/profile',
-        name: 'ProfilePage',
-        component: ProfilePage,
-        meta: { requiresAuth: true }
-    },
-    { path: '/login', name: 'Login', component: LoginPage },
+  { 
+    path: '/',
+    name: 'Stories',
+    component: StoryDisplay,
+  },
+  {
+    path: '/readstory/:id',
+    name: 'Story',
+    component: StoryContent,
+  },
+  {
+    path: '/scribe',
+    name: 'CreateStory',
+    component: CreateStory,
+    meta: { loggedIn: true }
+  },
+  {
+    path: '/profile',
+    name: 'ProfilePage',
+    component: ProfilePage,
+    meta: { requiresAuth: true }
+  },
+  { path: '/login', name: 'Login', component: LoginPage },
 ]
 
 const router = createRouter({
@@ -39,7 +39,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    const auth = useAuthStore()
+  const auth = useAuthStore()
   const isAuthenticated = auth.isAuthenticated // Check for token
   if (to.meta.requiresAuth && !isAuthenticated) {
     next({ name: 'Login' })

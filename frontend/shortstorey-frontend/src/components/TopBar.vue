@@ -15,25 +15,25 @@
 import { useAuthStore } from '@/store/auth'
 
 export default {
-    name: 'TopBar',
-    data() {
-        return {
-            auth: null
-        }
-    },
-    created() {
-        this.auth = useAuthStore()
-    },  
-    computed: {
-        isAuthenticated() {
-            return this.auth.isAuthenticated
-        }
-    },
-    methods: {
-        logOut() {
-            this.auth.logOut()
-        }
+  name: 'TopBar',
+  data() {
+    return {
+      auth: null
     }
+  },
+  created() {
+    this.auth = useAuthStore()
+  },  
+  computed: {
+    isAuthenticated() {
+      return this.auth.isAuthenticated
+    }
+  },
+  methods: {
+    logOut() {
+      this.auth.logOut()
+    }
+  }
 
 }
 </script>

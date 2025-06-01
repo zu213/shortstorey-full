@@ -21,7 +21,7 @@ export default {
       return localStorage.getItem('userid')
     },
     isAuthenticated() {
-        return this.auth.isAuthenticated
+      return this.auth.isAuthenticated
     }
   },
   async created() {
