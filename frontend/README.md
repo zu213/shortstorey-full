@@ -1,4 +1,6 @@
-# hello-vue-app
+# short storey frontends
+
+Frontend for shortstorey project, utilises `pianta` for token short term storage.
 
 ## Project setup
 ```
@@ -20,5 +22,6 @@ npm run build
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Structure
+
+Connects to the backend using the `vue.config.js` to reroute self targeted fetch requests
