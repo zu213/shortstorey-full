@@ -1,11 +1,14 @@
 import { PrismaClient, Story, User } from '@prisma/client'
+import bcrypt from 'bcrypt'
 
 const prisma = new PrismaClient()
 
 async function insertUsers() {
+  const passwordHash = await bcrypt.hash('password', 10)
   const alice = await prisma.user.create({
     data: {
       name: 'Alice',
+      passwordHash: passwordHash,
       rating: 3
     },
   })

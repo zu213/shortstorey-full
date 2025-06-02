@@ -2,18 +2,20 @@ import cors from "@fastify/cors";
 import { Story, User, Rating } from "@prisma/client";
 import fastify from "fastify";
 import Prisma from "./db";
+import bcrypt from 'bcrypt'
 
 export const server = fastify();
 
 server.register(cors, {});
 
-
 // User endpoints
+// needs password change
 server.get<{ Reply: User[] }>("/user", async (req, reply) => {
   const dbAllEntries = await Prisma.user.findMany({});
   reply.send(dbAllEntries);
 });
 
+// needs password change
 server.get<{ Body: User, Params: { id: string } }>("/user/:id", async (req, reply) => {
   const dbEntry = await Prisma.user.findUnique({
     where: { id: req.params.id },
@@ -26,6 +28,8 @@ server.get<{ Body: User, Params: { id: string } }>("/user/:id", async (req, repl
 
 server.post<{ Body: User }>("/user/create", async (req, reply) => {
   console.log(req.body)
+  let userCreateBody = req.body;
+  userCreateBody.passwordHash = await bcrypt.hash('password', 10)
   try {
     const createdUserData = await Prisma.user.create({ data: req.body });
     reply.send(createdUserData);
@@ -34,6 +38,7 @@ server.post<{ Body: User }>("/user/create", async (req, reply) => {
   }
 });
 
+// needs password change
 server.delete<{ Params: { id: string } }>("/user/delete/:id", async (req, reply) => {
   try {
     await Prisma.user.delete({ where: { id: req.params.id } });
@@ -43,6 +48,7 @@ server.delete<{ Params: { id: string } }>("/user/delete/:id", async (req, reply)
   }
 });
 
+// needs password change
 server.put<{ Params: { id: string }; Body: User }>("/user/update/:id", async (req, reply) => {
 
   try {

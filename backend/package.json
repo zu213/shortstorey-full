@@ -12,11 +12,13 @@
   "dependencies": {
     "@fastify/cors": "^7.0.0",
     "@prisma/client": "^3.14.0",
+    "bcrypt": "^6.0.0",
     "fastify": "^3.29.0",
     "prisma": "^3.14.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/jest": "^29.5.1",
     "jest": "^29.5.0",
     "jest-expect-message": "^1.1.3",
