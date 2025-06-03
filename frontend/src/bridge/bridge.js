@@ -20,3 +20,20 @@ export async function getUser(id){
   const json = await response.json()
   return json
 }
+
+export async function attemptLogin(username, password){
+
+  console.log('test')
+  const response = await fetch('/login', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ "name": username, "passGuess": password })
+  })
+
+  if(!response.ok) throw new Error('nope nope')
+  const json = await response.json()
+  return json
+}

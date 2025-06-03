@@ -30,7 +30,7 @@ const routes = [
     component: ProfilePage,
     meta: { requiresAuth: true }
   },
-  { path: '/login', name: 'Login', component: LoginPage },
+  { path: '/loginPage', name: 'Login', component: LoginPage },
 ]
 
 const router = createRouter({

@@ -5,7 +5,7 @@
         <router-link to="/">Home</router-link>
         <router-link to="/scribe">Create</router-link>
         <router-link v-if="isAuthenticated" to="/profile">Profile</router-link>
-        <router-link v-if="!isAuthenticated" to="/login">Login</router-link>
+        <router-link v-if="!isAuthenticated" to="/loginPage">Login</router-link>
         <button v-if="isAuthenticated" @click="logOut">Log out</button>
       </nav>
     </header>

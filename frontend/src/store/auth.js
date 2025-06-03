@@ -8,12 +8,11 @@ export const useAuthStore = defineStore('auth', {
     isAuthenticated: (state) => !!state.token
   },
   actions: {
-    logIn(token) {
+    logIn(token, username, userId) {
       this.token = token
       localStorage.setItem('token', token)
-      localStorage.setItem('username', this.username)
-      localStorage.setItem('userid', 'e4d839da-1c18-4a28-ac1d-546dc0e6b7b6')
-      localStorage.removeItem('token')
+      localStorage.setItem('username', username)
+      localStorage.setItem('userid', userId)
     },
     logOut() {
       this.token = null

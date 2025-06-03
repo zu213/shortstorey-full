@@ -10,6 +10,14 @@ module.exports = defineConfig({
       '/user': {
         target: 'http://localhost:3001',
         changeOrigin: true
+      },
+      '/login': {
+        target: 'http://localhost:3001',
+        changeOrigin: true
+      },
+      '/ratings': {
+        target: 'http://localhost:3001',
+        changeOrigin: true
       }
       // add other API routes here
     }

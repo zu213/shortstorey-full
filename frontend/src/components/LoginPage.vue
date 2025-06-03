@@ -11,6 +11,7 @@
 
 <script>
 import { useAuthStore } from '@/store/auth'
+import { attemptLogin } from '../bridge/bridge.js'
 
 export default {
   name: 'LoginPage',
@@ -25,11 +26,19 @@ export default {
     this.auth = useAuthStore()
   },
   methods: {
-    login() {
-      // Mock login logic
-      if (this.username === 'admin' && this.password === 'password') {
-        this.auth.logIn('mock')
-        this.$router.push({ name: 'Stories' })
+    async login() {
+
+      const userSideCheck = 1
+      if (1 === userSideCheck) {
+        const loginResponse = await attemptLogin(this.username, this.password)
+        if(loginResponse.token){
+          this.auth.logIn(loginResponse)
+          this.$router.push({ name: 'Stories' })
+        }else if(loginResponse.validUser == true){
+          alert('Invalid credentials')
+        }else{
+          alert('Invalid credentials')
+        }
       } else {
         alert('Invalid credentials')
       }
