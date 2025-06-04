@@ -4,6 +4,7 @@ import fastify from "fastify";
 import Prisma from "./db";
 import bcrypt from 'bcrypt'
 import { generateToken, verifyToken } from "./token";
+import { querySchema } from "./querySchema";
 
 export const server = fastify();
 
@@ -16,7 +17,7 @@ server.post<{ Body: {name: string, passGuess: string}, Reply: Object }>("/login"
     where: { name: req.body.name },
   });
   if(dbEntry && await bcrypt.compare(req.body.passGuess, dbEntry.passwordHash)){
-    reply.send({validUser: true, token: generateToken(dbEntry)})
+    reply.send({validUser: true, token: generateToken(dbEntry), username: dbEntry.name, userId: dbEntry.id})
   }else if(dbEntry) {
     reply.send({validUser: true});
   }else {
@@ -79,8 +80,15 @@ server.put<{ Params: { id: string }; Body: User }>("/user/update/:id", { preHand
 });
 
 // Story endpoints
-server.get<{ Reply: Story[] }>("/stories", async (req, reply) => {
-  const dbAllEntries = await Prisma.story.findMany({});
+server.get<{ Reply: Story[] }>("/stories", { schema: querySchema }, async (req, reply) => {
+  let dbAllEntries;
+  if(req?.query && Object.entries(req.query).length > 0){
+    dbAllEntries = await Prisma.story.findMany({
+      where: req.query,
+    });
+  }else{
+    dbAllEntries = await Prisma.story.findMany({});
+  }
   reply.send(dbAllEntries);
 });
 

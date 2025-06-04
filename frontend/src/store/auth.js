@@ -8,7 +8,7 @@ export const useAuthStore = defineStore('auth', {
     isAuthenticated: (state) => !!state.token
   },
   actions: {
-    logIn(token, username, userId) {
+    logIn({token, username, userId}) {
       this.token = token
       localStorage.setItem('token', token)
       localStorage.setItem('username', username)

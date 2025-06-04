@@ -1,7 +1,7 @@
 
 export async function getStories(params){
   console.log(params) // temp
-  const response = await fetch(`/stories`)
+  const response = await fetch(`/stories${`?${params}` ?? ''}`)
   if(!response.ok) throw new Error('nope nope')
   const json = await response.json()
   return json
