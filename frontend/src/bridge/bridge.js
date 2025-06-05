@@ -21,6 +21,23 @@ export async function getUser(id){
   return json
 }
 
+export async function updateUser(newUser, token){
+  console.log(newUser, token)
+  const response = await fetch(`/user/update/${newUser.id}`, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(newUser)
+  })
+
+  if(!response.ok) throw new Error('nope nope')
+  const json = await response.json()
+  return json
+}
+
 export async function attemptLogin(username, password){
 
   console.log('test')

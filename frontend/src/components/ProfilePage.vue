@@ -2,6 +2,11 @@
   <div class="storyContainer">
     <div v-if="user?.name">
      Change name : {{ user.name }}
+     <form @submit.prevent="submitForm">
+      <label for="fname">Nmae:</label><br>
+      <input type="text" v-model="name" name="fname" />
+      <input type="submit" value="Update" />
+    </form> 
     </div>
     <div>
       change password
@@ -22,7 +27,7 @@ import StoryCard from './StoryCard.vue'
 </script>
 
 <script>
-import { getUser } from '../bridge/bridge.js'
+import { getUser, updateUser } from '../bridge/bridge.js'
 import { useAuthStore } from '@/store/auth'
 import { getStories } from '../bridge/bridge.js'
 
@@ -30,6 +35,7 @@ export default {
   name: 'ProfilePage',
   data() {
     return {
+      name: '',
       user: null,
       auth: null,
       stories: []
@@ -48,6 +54,20 @@ export default {
     this.auth = useAuthStore()
     this.user = await getUser(this.currentUserId)
     this.stories = await getStories(`user_id=${this.user?.id}`)
+  },
+  methods: {
+    async submitForm() {
+      const userToUpdate = {
+        id: this.user.id,
+        name: this.name
+      }
+      try {
+        const result = await updateUser(userToUpdate, this.auth.token)
+        console.log('Update successful:', result)
+      } catch (err) {
+        console.error('Update failed:', err)
+      }
+    }
   }
 }
 </script>

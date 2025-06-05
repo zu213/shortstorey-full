@@ -32,7 +32,6 @@ server.get<{ Reply: User[] }>("/user", async (req, reply) => {
   reply.send(dbAllEntries);
 });
 
-// needs change to prune password
 server.get<{ Body: User, Params: { id: string } }>("/user/:id", async (req, reply) => {
   const dbEntry = await Prisma.user.findUnique({
     where: { id: req.params.id },
@@ -40,6 +39,7 @@ server.get<{ Body: User, Params: { id: string } }>("/user/:id", async (req, repl
   if (!dbEntry) {
     reply.status(500).send({ msg: `Error finding User with id ${req.params.id}` });
   }
+  // needs change to prune password hash and such
   reply.send(dbEntry);
 });
 
@@ -69,11 +69,14 @@ server.delete<{ Params: { id: string } }>("/user/delete/:id", { preHandler: veri
 // needs to check password
 server.put<{ Params: { id: string }; Body: User }>("/user/update/:id", { preHandler: verifyToken }, async (req, reply) => {
   try {
-    await Prisma.user.update({
-      data: req.body,
+    const { name } = req.body
+    const response = await Prisma.user.update({
       where: { id: req.params.id },
-    });
-    reply.send({ msg: "Updated successfully" });
+      data: {
+        ...(name && { name })
+      }
+    })
+    reply.send({ msg: "Updated successfully", user: response });
   } catch {
     reply.status(500).send({ msg: "Error updating" });
   }
