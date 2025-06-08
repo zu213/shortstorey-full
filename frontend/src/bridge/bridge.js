@@ -1,4 +1,6 @@
 
+// Stories
+
 export async function getStories(params){
   console.log(params) // temp
   const response = await fetch(`/stories${`?${params}` ?? ''}`)
@@ -13,6 +15,24 @@ export async function getStory(id){
   const json = await response.json()
   return json
 }
+
+export async function addStory(newStory, token){
+  const response = await fetch(`/stories/create`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(newStory)
+  })
+
+  if(!response.ok) throw new Error('nope nope')
+  const json = await response.json()
+  return json
+}
+
+// Users
 
 export async function getUser(id){
   const response = await fetch(`/user/${id}`)
@@ -38,6 +58,8 @@ export async function updateUser(newUser, token){
   return json
 }
 
+// login
+
 export async function attemptLogin(username, password){
 
   console.log('test')
@@ -54,3 +76,5 @@ export async function attemptLogin(username, password){
   const json = await response.json()
   return json
 }
+
+// ratings

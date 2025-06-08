@@ -2,7 +2,7 @@
   <div class="storyContainer">
     <div v-if="user?.name">
      Change name : {{ user.name }}
-     <form @submit.prevent="submitForm">
+     <form @submit.prevent="submitUserForm">
       <label for="fname">Nmae:</label><br>
       <input type="text" v-model="name" name="fname" />
       <input type="submit" value="Update" />
@@ -56,7 +56,7 @@ export default {
     this.stories = await getStories(`user_id=${this.user?.id}`)
   },
   methods: {
-    async submitForm() {
+    async submitUserForm() {
       const userToUpdate = {
         id: this.user.id,
         name: this.name

@@ -45,7 +45,6 @@ server.get<{ Body: User, Params: { id: string } }>("/user/:id", async (req, repl
 
 // need to add check if username already exists
 server.post<{ Body: User }>("/user/create", async (req, reply) => {
-  console.log(req.body)
   let userCreateBody = req.body;
   userCreateBody.passwordHash = await bcrypt.hash('password', 10)
   try {
@@ -69,11 +68,13 @@ server.delete<{ Params: { id: string } }>("/user/delete/:id", { preHandler: veri
 // needs to check password
 server.put<{ Params: { id: string }; Body: User }>("/user/update/:id", { preHandler: verifyToken }, async (req, reply) => {
   try {
-    const { name } = req.body
+    const { name, passwordHash } = req.body
+    const hashedPassword = typeof passwordHash === 'string' && passwordHash.length > 0 ? await bcrypt.hash(passwordHash, 10) : null
     const response = await Prisma.user.update({
       where: { id: req.params.id },
       data: {
-        ...(name && { name })
+        ...(name && { name }),
+        ...(hashedPassword && { passwordHash: hashedPassword })
       }
     })
     reply.send({ msg: "Updated successfully", user: response });
@@ -118,7 +119,7 @@ server.post<{ Body: Story }>("/stories/create", { preHandler: verifyToken }, asy
 });
 
 // needs to check password
-server.delete<{ Params: { id: string } }>("/stories/delete/:id", async (req, reply) => {
+server.delete<{ Params: { id: string } }>("/stories/delete/:id", { preHandler: verifyToken }, async (req, reply) => {
   try {
     await Prisma.story.delete({ where: { id: req.params.id } });
     reply.send({ msg: "Deleted successfully" });
@@ -128,7 +129,7 @@ server.delete<{ Params: { id: string } }>("/stories/delete/:id", async (req, rep
 });
 
 // needs to check password
-server.put<{ Params: { id: string }; Body: Story }>("/stories/update/:id", async (req, reply) => {
+server.put<{ Params: { id: string }; Body: Story }>("/stories/update/:id", { preHandler: verifyToken }, async (req, reply) => {
   try {
     await Prisma.story.update({
       data: req.body,
@@ -158,7 +159,7 @@ server.get<{ Body: Rating, Params: { id: string } }>("/rating/:id", async (req, 
 });
 
 // needs to check password
-server.post<{ Body: Rating }>("/rating/create", async (req, reply) => {
+server.post<{ Body: Rating }>("/rating/create", { preHandler: verifyToken }, async (req, reply) => {
   let updatedEntryBody = req.body;
 
   if(updatedEntryBody.actual_score < 0 || updatedEntryBody.actual_score > 5){
@@ -279,8 +280,8 @@ server.post<{ Body: Rating }>("/rating/create", async (req, reply) => {
 
 });
 
-// needs to check password
-server.delete<{ Params: { id: string } }>("/rating/delete/:id", async (req, reply) => {
+// needs to check password  - needs to update rating weights also
+server.delete<{ Params: { id: string } }>("/rating/delete/:id", { preHandler: verifyToken }, async (req, reply) => {
   try {
     await Prisma.rating.delete({ where: { id: req.params.id } });
     reply.send({ msg: "Deleted successfully" });
@@ -289,8 +290,8 @@ server.delete<{ Params: { id: string } }>("/rating/delete/:id", async (req, repl
   }
 });
 
-// needs to check password
-server.put<{ Params: { id: string }; Body: Rating }>("/rating/update/:id", async (req, reply) => {
+// needs to check password - needs to update rating weights also
+server.put<{ Params: { id: string }; Body: Rating }>("/rating/update/:id", { preHandler: verifyToken }, async (req, reply) => {
   try {
     await Prisma.rating.update({
       data: req.body,
