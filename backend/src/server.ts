@@ -45,12 +45,13 @@ server.get<{ Body: User, Params: { id: string } }>("/user/:id", async (req, repl
 
 // need to add check if username already exists
 server.post<{ Body: User }>("/user/create", async (req, reply) => {
-  let userCreateBody = req.body;
-  userCreateBody.passwordHash = await bcrypt.hash('password', 10)
+  let password = await bcrypt.hash(req.body.passwordHash, 10);
+  let userCreateBody = {name: req.body.name, passwordHash: password};
   try {
-    const createdUserData = await Prisma.user.create({ data: req.body });
+    const createdUserData = await Prisma.user.create({ data: userCreateBody });
     reply.send(createdUserData);
-  } catch {
+  } catch(e) {
+    console.log(e)
     reply.status(500).send({ msg: "Error creating User" });
   }
 });

@@ -6,6 +6,7 @@ import StoryContent from '@/components/StoryContent.vue'
 import ProfilePage from '@/components/ProfilePage.vue'
 import CreateStory from '@/components/CreateStory.vue'
 import { useAuthStore } from '@/store/auth'
+import CreateUser from '@/components/CreateUser.vue'
 
 const routes = [
   { 
@@ -30,6 +31,12 @@ const routes = [
     component: ProfilePage,
     meta: { requiresAuth: true }
   },
+  {
+    path: '/createAccount',
+    name: 'CreateAccount',
+    component: CreateUser,
+    meta: { requiresAuth: false }
+  },
   { path: '/loginPage', name: 'Login', component: LoginPage },
 ]
 
@@ -40,9 +47,12 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const auth = useAuthStore()
+  console.log(!!to.meta.requiresAuth)
   const isAuthenticated = auth.isAuthenticated // Check for token
   if (to.meta.requiresAuth && !isAuthenticated) {
     next({ name: 'Login' })
+  } else if (to.meta.requiresAuth == false && isAuthenticated) {
+    next({ name: 'ProfilePage' })
   } else {
     next()
   }

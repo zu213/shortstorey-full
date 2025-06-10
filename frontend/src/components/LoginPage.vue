@@ -6,6 +6,9 @@
         <input v-model="password" type="password" placeholder="Password" required />
         <button type="submit">Login</button>
         </form>
+        <div>
+          New here ? <router-link to="/createAccount">create ana ccount</router-link>
+        </div>
     </div>
 </template>
 

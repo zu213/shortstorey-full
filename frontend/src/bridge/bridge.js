@@ -2,7 +2,6 @@
 // Stories
 
 export async function getStories(params){
-  console.log(params) // temp
   const response = await fetch(`/stories${`?${params}` ?? ''}`)
   if(!response.ok) throw new Error('nope nope')
   const json = await response.json()
@@ -47,6 +46,21 @@ export async function updateUser(newUser, token){
     method: 'PUT',
     headers: {
       'Authorization': `Bearer ${token}`,
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(newUser)
+  })
+
+  if(!response.ok) throw new Error('nope nope')
+  const json = await response.json()
+  return json
+}
+
+export async function createUser(newUser){
+  const response = await fetch(`/user/create`, {
+    method: 'POST',
+    headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
