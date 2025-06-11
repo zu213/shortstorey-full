@@ -15,7 +15,7 @@ export function generateToken(user: User) {
   )
 }
 
-export async function verifyToken(request: any, reply: any, done: any) {
+export async function verifyToken(request: any, reply: any) {
   const authHeader = request.headers.authorization
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -44,7 +44,6 @@ export async function verifyToken(request: any, reply: any, done: any) {
 
     // Attach to request for use in route handlers
     request.user = user
-    done()
   } catch (err) {
     reply.code(401).send({ error: 'Invalid or expired token' })
   }
