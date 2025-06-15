@@ -90,9 +90,24 @@ server.get<{ Reply: Story[] }>("/stories", { schema: querySchema }, async (req, 
   if(req?.query && Object.entries(req.query).length > 0){
     dbAllEntries = await Prisma.story.findMany({
       where: req.query,
+      include: {
+        user: {
+          select: {
+            name: true
+          }
+        }
+      }
     });
   }else{
-    dbAllEntries = await Prisma.story.findMany({});
+    dbAllEntries = await Prisma.story.findMany({
+      include: {
+        user: {
+          select: {
+            name: true
+          }
+        }
+      }
+    });
   }
   reply.send(dbAllEntries);
 });
@@ -100,6 +115,13 @@ server.get<{ Reply: Story[] }>("/stories", { schema: querySchema }, async (req, 
 server.get<{ Body: Story; Params: { id: string } }>("/stories/:id", async (req, reply) => {
   const dbEntry = await Prisma.story.findUnique({
     where: { id: req.params.id },
+    include: {
+      user: {
+        select: {
+          name: true,
+        }
+      },
+    },
   });
   if (!dbEntry) {
     reply.status(500).send({ msg: `Error finding Story with id ${req.params.id}` });

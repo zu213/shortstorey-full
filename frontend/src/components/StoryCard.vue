@@ -1,13 +1,11 @@
 <template>
   <div class="storyContainer" @click="openStory">
     <h1>{{ story.title }}</h1>
-    {{ authorDetails.name }}
+    {{ story.user?.name ?? 'no author' }}
   </div>
 </template>
 
 <script>
-import { getUser } from '@/bridge/bridge'
-
 export default {
   name: 'StoryCard',
   data () {
@@ -22,9 +20,6 @@ export default {
   },
   props: {
     story: Object
-  },
-  async created() {
-    this.authorDetails = await getUser(this.story.user_id)
   },
   methods: {
     openStory(){
