@@ -182,13 +182,14 @@ server.get<{ Body: Rating, Params: { id: string } }>("/rating/:id", async (req, 
 });
 
 // needs to check password
-server.post<{ Body: Rating }>("/rating/create", { preHandler: verifyToken }, async (req, reply) => {
-  let updatedEntryBody = req.body;
+server.post<{ Body: {actual_score: number, user_id: string, to_story_id: string} }>("/rating/create", { preHandler: verifyToken }, async (req, reply) => {
+  let updatedEntryBody : any = req.body;
 
   if(updatedEntryBody.actual_score < 0 || updatedEntryBody.actual_score > 5){
     throw Error('Invalid scre given')
   }
 
+  console.log(req.body)
   let dupeCount = await Prisma.rating.count(
     {
       where: {
@@ -198,6 +199,7 @@ server.post<{ Body: Rating }>("/rating/create", { preHandler: verifyToken }, asy
     }
   )
   if(dupeCount > 0){
+    console.log(dupeCount)
     throw Error('Review already given')
   }
 
@@ -238,12 +240,12 @@ server.post<{ Body: Rating }>("/rating/create", { preHandler: verifyToken }, asy
   }
   const final_score =  user_score ? user_score * (1-multiplier) + updatedEntryBody.actual_score * multiplier : updatedEntryBody.actual_score
 
-  updatedEntryBody.created_at = new Date()
+  updatedEntryBody["created_at"] = new Date()
   updatedEntryBody.final_score = final_score
   updatedEntryBody.user_score = multiplier
 
   try {
-    const createdRatingData = await Prisma.rating.create({ data: updatedEntryBody });
+    const createdRatingData = await Prisma.rating.create({ data: updatedEntryBody as Rating });
     reply.send(createdRatingData);
   } catch {
     reply.status(500).send({ msg: "Error creating rating" });

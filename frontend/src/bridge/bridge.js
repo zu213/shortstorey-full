@@ -92,3 +92,19 @@ export async function attemptLogin(username, password){
 }
 
 // ratings
+
+export async function postRating(rating, token){
+  const response = await fetch(`/rating/create`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(rating)
+  })
+
+  if(!response.ok) throw new Error('nope nope')
+  const json = await response.json()
+  return json
+}

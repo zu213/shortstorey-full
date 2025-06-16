@@ -7,7 +7,8 @@
     "dev": "nodemon -e ts,prisma,sql ./src/app.ts",
     "test": "jest --testPathPattern=test/",
     "prisma-setup": "prisma migrate dev && prisma generate",
-    "prisma-format": "prisma format"
+    "prisma-format": "prisma format",
+    "prisma-local": "npx prisma studio"
   },
   "dependencies": {
     "@fastify/cors": "^7.0.0",

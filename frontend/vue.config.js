@@ -15,7 +15,7 @@ module.exports = defineConfig({
         target: 'http://localhost:3001',
         changeOrigin: true
       },
-      '/ratings': {
+      '/rating': {
         target: 'http://localhost:3001',
         changeOrigin: true
       }
