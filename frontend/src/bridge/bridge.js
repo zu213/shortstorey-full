@@ -93,6 +93,13 @@ export async function attemptLogin(username, password){
 
 // ratings
 
+export async function getRatings(params){
+  const response = await fetch(`/rating${`?${params}` ?? ''}`)
+  if(!response.ok) throw new Error('nope nope')
+  const json = await response.json()
+  return json
+}
+
 export async function postRating(rating, token){
   const response = await fetch(`/rating/create`, {
     method: 'POST',
@@ -104,7 +111,23 @@ export async function postRating(rating, token){
     body: JSON.stringify(rating)
   })
 
-  if(!response.ok) throw new Error('nope nope')
   const json = await response.json()
+  if(!response.ok) throw new Error(`nope ${json.message}`)
+  return json
+}
+
+export async function putRating(rating, token, id){
+  const response = await fetch(`/rating/update/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(rating)
+  })
+
+  const json = await response.json()
+  if(!response.ok) throw new Error(`nope ${json.message}`)
   return json
 }

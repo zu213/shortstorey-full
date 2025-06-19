@@ -1,17 +1,29 @@
 <template>
   <div class="storyContainer" v-if="story">
     <div>title {{ story.title }}</div>
-    <div>content: {{ story.content }}</div>
     <div>user: 
       <router-link :to="`/profile/${story.user_id}`">{{ story.user.name }}</router-link>
     </div>
 
-    <router-link v-if="story.rating" :to="`/ratingstory/${story.id}`">
-      {{story.rating * 5}}/5
-    </router-link>
-    <div v-else>
-      No ratings yet
-    </div>
+      <div v-if="totalRating">
+        total score {{story.rating * 5}}/5
+      </div>
+      <div v-else>
+        No ratings yet
+      </div>
+
+      <div v-if="auth">
+        <div v-if="userRating">
+          your score {{story.rating * 5}}/5
+        </div>
+        <div v-else>
+          you havent rated this yet
+        </div>
+      </div>
+
+      <div v-for="(rating, i) in ratings" :key="i">
+        {{ rating }}
+      </div>
 
     <div>
       <button @click="submitRating(1)">
@@ -35,21 +47,27 @@
 
 <script>
 
-import { getStory, postRating } from '../bridge/bridge.js'
+import { getStory, getRatings, postRating } from '../bridge/bridge.js'
 import { useAuthStore } from '@/store/auth'
 
 export default {
-  name: 'StoryContent',
+  name: 'StoryRating',
   data() {
     return {
       story: null,
-      auth: null
+      auth: null,
+      totalRating: null,
+      userRating: null,
+      ratings: []
     }
   },
   async created() {
     const id = this.$route.params.id
     this.story = await getStory(id)
+    this.totalRating = this.story.rating
     this.auth = useAuthStore()
+    this.userRating = await getRatings(`to_story_id=${id}&user_id=${this.auth.getUserId}`)
+    this.ratings = await getRatings(`to_story_id=${id}`)
   },
   computed: {
     currentUser() {
@@ -58,7 +76,6 @@ export default {
   },
   methods: {
     async submitRating(rating){
-      console.log(this.auth.token)
       const ratingDetails = {
         actual_score: rating,
         to_story_id: this.story.id,

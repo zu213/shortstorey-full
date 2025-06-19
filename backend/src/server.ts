@@ -4,7 +4,7 @@ import fastify from "fastify";
 import Prisma from "./db";
 import bcrypt from 'bcrypt'
 import { generateToken, verifyToken } from "./token";
-import { querySchema } from "./querySchema";
+import { storiesQuerySchema, ratingsQuerySchema } from "./querySchema";
 
 export const server = fastify();
 
@@ -85,7 +85,7 @@ server.put<{ Params: { id: string }; Body: User }>("/user/update/:id", { preHand
 });
 
 // Story endpoints
-server.get<{ Reply: Story[] }>("/stories", { schema: querySchema }, async (req, reply) => {
+server.get<{ Reply: Story[] }>("/stories", { schema: storiesQuerySchema }, async (req, reply) => {
   let dbAllEntries;
   if(req?.query && Object.entries(req.query).length > 0){
     dbAllEntries = await Prisma.story.findMany({
@@ -166,8 +166,15 @@ server.put<{ Params: { id: string }; Body: Story }>("/stories/update/:id", { pre
 
 
 // Rating endpoints
-server.get<{ Reply: Rating[] }>("/rating", async (req, reply) => {
-  const dbAllEntries = await Prisma.rating.findMany({});
+server.get<{ Reply: Rating[] }>("/rating", { schema: ratingsQuerySchema }, async (req, reply) => {
+  let dbAllEntries;
+  if(req.query && Object.entries(req.query).length > 0){
+    dbAllEntries = await Prisma.rating.findMany({
+      where: req.query,
+    });
+  } else {
+    dbAllEntries = await Prisma.rating.findMany({});
+  }
   reply.send(dbAllEntries);
 });
 
@@ -189,7 +196,6 @@ server.post<{ Body: {actual_score: number, user_id: string, to_story_id: string}
     throw Error('Invalid scre given')
   }
 
-  console.log(req.body)
   let dupeCount = await Prisma.rating.count(
     {
       where: {
@@ -199,7 +205,6 @@ server.post<{ Body: {actual_score: number, user_id: string, to_story_id: string}
     }
   )
   if(dupeCount > 0){
-    console.log(dupeCount)
     throw Error('Review already given')
   }
 

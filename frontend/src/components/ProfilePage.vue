@@ -50,7 +50,6 @@ export default {
     }
   },
   async created() {
-    console.log(localStorage.getItem('userid'))
     this.auth = useAuthStore()
     this.user = await getUser(this.currentUserId)
     this.stories = await getStories(`user_id=${this.user?.id}`)
