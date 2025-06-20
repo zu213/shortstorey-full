@@ -47,7 +47,7 @@
 
 <script>
 
-import { getStory, getRatings, postRating } from '../bridge/bridge.js'
+import { getStory, getRatings, postRating, putRating, checkRating } from '../bridge/bridge.js'
 import { useAuthStore } from '@/store/auth'
 
 export default {
@@ -81,9 +81,10 @@ export default {
         to_story_id: this.story.id,
         user_id: this.auth.getUserId
       }
+      const alreadyExists  = await checkRating(this.auth.getUserId, this.story.id)
       try {
         console.log(ratingDetails)
-        const result = await postRating(ratingDetails, this.auth.token)
+        const result = alreadyExists.exists ? await putRating(ratingDetails, this.auth.token, alreadyExists.exists?.id) : await postRating(ratingDetails, this.auth.token)
         console.log('Update successful:', result)
       } catch (err) {
         alert(err)

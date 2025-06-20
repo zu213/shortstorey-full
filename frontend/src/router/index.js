@@ -59,7 +59,6 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const auth = useAuthStore()
-  console.log(!!to.meta.requiresAuth)
   const isAuthenticated = auth.isAuthenticated // Check for token
   if (to.meta.requiresAuth && !isAuthenticated) {
     next({ name: 'Login' })

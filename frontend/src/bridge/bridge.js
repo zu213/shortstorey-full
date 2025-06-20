@@ -100,6 +100,13 @@ export async function getRatings(params){
   return json
 }
 
+export async function checkRating(userId, storyId){
+  const response = await fetch(`/rating/${storyId}/${userId}`)
+  if(!response.ok) throw new Error('nope nope')
+  const json = await response.json()
+  return json
+}
+
 export async function postRating(rating, token){
   const response = await fetch(`/rating/create`, {
     method: 'POST',

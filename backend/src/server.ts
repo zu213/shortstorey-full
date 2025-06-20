@@ -188,6 +188,16 @@ server.get<{ Body: Rating, Params: { id: string } }>("/rating/:id", async (req, 
   reply.send(dbEntry);
 });
 
+server.get<{ Params: { storyid: string, userid: string }}>("/rating/:storyid/:userid", async (req, reply) => {
+  const existing = await Prisma.rating.findFirst({
+    where: {
+      user_id: req.params.userid,
+      to_story_id: req.params.storyid,
+    },
+  });
+  reply.send({ exists: existing });
+});
+
 // needs to check password
 server.post<{ Body: {actual_score: number, user_id: string, to_story_id: string} }>("/rating/create", { preHandler: verifyToken }, async (req, reply) => {
   let updatedEntryBody : any = req.body;
