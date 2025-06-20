@@ -1,15 +1,17 @@
 <template>
-  
-  <div v-if="isAuthenticated" class="storyContainer">
+  <div v-if="isAuthenticated" class="createStory">
     create a story here!
     <form @submit.prevent="submitStoryForm">
-      <label for="ftitle">Title:</label><br>
-      <input type="text" v-model="title" name="ftitle" />
-      <label for="fcontent">Title:</label><br>
-      <input type="text" v-model="content" name="fcontent" />
+      <div>
+        <label for="ftitle">Title:</label>
+        <input type="text" v-model="title" name="ftitle" />
+      </div>
+      <div>
+        <label for="fcontent">Content:</label>
+        <input type="text" v-model="content" name="fcontent" />
+      </div>
       <input type="submit" value="Update" />
     </form> 
-    
   </div>
   <div v-else>
     you need to log in

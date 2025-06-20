@@ -67,9 +67,10 @@ server.delete<{ Params: { id: string } }>("/user/delete/:id", { preHandler: veri
 });
 
 // needs to check password
-server.put<{ Params: { id: string }; Body: User }>("/user/update/:id", { preHandler: verifyToken }, async (req, reply) => {
+server.put<{ Params: { id: string }; Body: {id: string, name: string | undefined, password: string | undefined} }>("/user/update/:id", { preHandler: verifyToken }, async (req, reply) => {
   try {
-    const { name, passwordHash } = req.body
+    const { name, password: passwordHash } = req.body
+    console.log(req.body)
     const hashedPassword = typeof passwordHash === 'string' && passwordHash.length > 0 ? await bcrypt.hash(passwordHash, 10) : null
     const response = await Prisma.user.update({
       where: { id: req.params.id },

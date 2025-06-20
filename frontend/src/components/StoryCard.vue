@@ -1,12 +1,14 @@
 <template>
-  <router-link :to="`/readstory/${story.id}`">
-    <div>
-      <h1>{{ story.title }}</h1>
-      <router-link :to="`/profile/${story.user_id}`">
-        {{ story.user?.name ?? 'no author found' }}
-      </router-link>
-    </div>
-  </router-link>
+  <div class="storyCard">
+    <router-link :to="`/readstory/${story.id}`">
+      <div>
+        <h1>{{ story.title }}</h1>
+        <router-link :to="`/profile/${story.user_id}`">
+          {{ story.user?.name ?? 'no author found' }}
+        </router-link>
+      </div>
+    </router-link>
+  </div>
 </template>
 
 <script>
@@ -19,6 +21,7 @@ export default {
   },
   computed: {
     currentUser() {
+      // MAYBE MAKE ID ?
       return localStorage.getItem('username')
     }
   },

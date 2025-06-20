@@ -1,5 +1,5 @@
 <template>
-  <div class="storyContainer" v-if="story">
+  <div class="storyContent" v-if="story">
     <div>title {{ story.title }}</div>
     <div>content: {{ story.content }}</div>
     <div>user: 
@@ -53,6 +53,7 @@ export default {
   },
   computed: {
     currentUser() {
+      // MAYBE MAKE ID ?
       return localStorage.getItem('username')
     }
   },

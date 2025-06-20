@@ -1,5 +1,5 @@
 <template>
-  <div class="storyContainer">
+  <div class="publicProfilePage">
     <div>
       {{ user?.name }} stories:
       <ul>
@@ -30,7 +30,7 @@ export default {
   },
   computed: {
     viewedUserId() {
-      return localStorage.getItem('userid')
+      return localStorage.getItem('userId')
     },
   },
   async created() {

@@ -1,10 +1,8 @@
 <template>
-  <div class="storyContainer">
-    <ul>
-      <li v-for="(story, i) in stories" :key="i">
-        <StoryCard :story="story" />
-      </li>
-    </ul>
+  <div class="storyDisplay">
+    <div v-for="(story, i) in stories" :key="i">
+      <StoryCard :story="story" />
+    </div>
   </div>
 </template>
 
@@ -24,6 +22,7 @@ export default {
   },
   computed: {
     currentUser() {
+      // MAYBE MAKE ID ?
       return localStorage.getItem('username')
     }
   },

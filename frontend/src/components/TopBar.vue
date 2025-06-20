@@ -1,6 +1,7 @@
 <template>
     <header class="top-bar">
-      <h1>My App</h1>
+      <img alt="Main logo" class="logo" src="../assets/logo.png">
+      <h1>Short Storey</h1>
       <nav>
         <router-link to="/">Home</router-link>
         <router-link to="/scribe">Create</router-link>
@@ -32,6 +33,7 @@ export default {
   methods: {
     logOut() {
       this.auth.logOut()
+      this.$router.push('/')
     }
   }
 
@@ -47,6 +49,12 @@ export default {
   nav a {
     margin-right: 1rem;
     color: white;
+  }
+  .logo {
+    max-width: 200px;
+    height: 20vh;
+    width: 20vh;
+    aspect-ratio: 1;
   }
   </style>
   

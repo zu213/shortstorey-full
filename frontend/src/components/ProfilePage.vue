@@ -1,23 +1,24 @@
 <template>
-  <div class="storyContainer">
+  <div class="profilePage">
     <div v-if="user?.name">
-     Change name : {{ user.name }}
+     Current name : {{ user.name }}
      <form @submit.prevent="submitUserForm">
-      <label for="fname">Nmae:</label><br>
-      <input type="text" v-model="name" name="fname" />
+      <div>
+        <label for="fname">New name:</label>
+        <input type="text" v-model="name" name="fname" />
+      </div>
+      <div>
+        <label for="fpassword">New password:</label>
+        <input type="text" v-model="password" name="fpassword" />
+      </div>
       <input type="submit" value="Update" />
     </form> 
     </div>
     <div>
-      change password
-    </div>
-    <div>
       Your stories:
-      <ul>
-        <li v-for="(story, i) in stories" :key="i">
-          <StoryCard :story="story" />
-        </li>
-      </ul>
+      <div v-for="(story, i) in stories" :key="i">
+        <StoryCard :story="story" />
+      </div>
     </div>
   </div>
 </template>
@@ -36,6 +37,7 @@ export default {
   data() {
     return {
       name: '',
+      password: '',
       user: null,
       auth: null,
       stories: []
@@ -43,7 +45,7 @@ export default {
   },
   computed: {
     currentUserId() {
-      return localStorage.getItem('userid')
+      return localStorage.getItem('userId')
     },
     isAuthenticated() {
       return this.auth.isAuthenticated
@@ -58,7 +60,8 @@ export default {
     async submitUserForm() {
       const userToUpdate = {
         id: this.user.id,
-        name: this.name
+        ...(this.name && { name: this.name }),
+        ...(this.password && { password: this.password }),
       }
       try {
         const result = await updateUser(userToUpdate, this.auth.token)

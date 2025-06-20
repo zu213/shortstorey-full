@@ -1,5 +1,5 @@
 <template>
-  <div class="storyContainer" v-if="story">
+  <div class="storyRating" v-if="story">
     <div>title {{ story.title }}</div>
     <div>user: 
       <router-link :to="`/profile/${story.user_id}`">{{ story.user.name }}</router-link>
@@ -43,6 +43,9 @@
       </button>
     </div>
   </div>
+  <div v-else>
+    No story found
+  </div>
 </template>
 
 <script>
@@ -71,6 +74,7 @@ export default {
   },
   computed: {
     currentUser() {
+      // MAYBE MAKE ID ?
       return localStorage.getItem('username')
     }
   },
