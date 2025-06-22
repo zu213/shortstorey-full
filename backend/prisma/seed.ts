@@ -37,8 +37,7 @@ async function insertRatings(users: User[], stories: Story[]) {
       created_at: new Date(),
       actual_score: 4,
       user_id: users[0].id,
-      user_score: users[0].rating ?? 3,
-      final_score: 4,
+      rating_power: users[0].rating ?? 0.5,
       to_story:  {
         connect: { id: stories[0].id }, // Correct way to relate to existing user
       },

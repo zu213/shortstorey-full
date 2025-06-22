@@ -5,6 +5,7 @@ import Prisma from "./db";
 import bcrypt from 'bcrypt'
 import { generateToken, verifyToken } from "./token";
 import { storiesQuerySchema, ratingsQuerySchema } from "./querySchema";
+import { checkIfRatingExists, createNewRating, deleteRating, propagateRatingToStory, propagateRatingToUser, updateRating, updateStoryBlind } from "./ratingHandler";
 
 export const server = fastify();
 
@@ -70,7 +71,6 @@ server.delete<{ Params: { id: string } }>("/user/delete/:id", { preHandler: veri
 server.put<{ Params: { id: string }; Body: {id: string, name: string | undefined, password: string | undefined} }>("/user/update/:id", { preHandler: verifyToken }, async (req, reply) => {
   try {
     const { name, password: passwordHash } = req.body
-    console.log(req.body)
     const hashedPassword = typeof passwordHash === 'string' && passwordHash.length > 0 ? await bcrypt.hash(passwordHash, 10) : null
     const response = await Prisma.user.update({
       where: { id: req.params.id },
@@ -199,147 +199,47 @@ server.get<{ Params: { storyid: string, userid: string }}>("/rating/:storyid/:us
   reply.send({ exists: existing });
 });
 
-// needs to check password
 server.post<{ Body: {actual_score: number, user_id: string, to_story_id: string} }>("/rating/create", { preHandler: verifyToken }, async (req, reply) => {
-  let updatedEntryBody : any = req.body;
 
-  if(updatedEntryBody.actual_score < 0 || updatedEntryBody.actual_score > 5){
-    throw Error('Invalid scre given')
+  if(req.body.actual_score < 0 || req.body.actual_score > 5){
+    throw Error('Invalid score given')
   }
-
-  let dupeCount = await Prisma.rating.count(
-    {
-      where: {
-        user_id: updatedEntryBody.user_id,
-        to_story_id: updatedEntryBody.to_story_id
-      }
-    }
-  )
-  if(dupeCount > 0){
-    throw Error('Review already given')
+  let alreadyExists = await checkIfRatingExists(req.body.user_id, req.body.to_story_id)
+  if(alreadyExists){
+    throw new Error('Rating already exists!')
   }
-
-  const from_user = await Prisma.user.findUnique({
-    where: { id: req.body.user_id},
-  });
-  // if not found user global average
-  var multiplier
-  if (from_user && from_user.rating) {
-    multiplier =  from_user.rating / 5
-  }else{
-     multiplier = 0.5
-  }
-
-  // now get the users average score
-  const story = await Prisma.story.findUnique({
-    where: { id: req.body.to_story_id},
-  });
-  if(!story){
-    throw new Error('Error story not found')
-  }
-
-  const to_user = await Prisma.user.findUnique({
-    where: { id: story?.user_id},
-  });
-
-  if(!to_user){
-    throw Error('Invalid no reviewer id found')
-  }
-
-  if(to_user?.id == from_user?.id){
-    throw Error('Invalid review, you cannot self review!')
-  }
-
-  var user_score;
-  if(to_user && to_user.rating){
-    user_score = to_user.rating
-  }
-  const final_score =  user_score ? user_score * (1-multiplier) + updatedEntryBody.actual_score * multiplier : updatedEntryBody.actual_score
-
-  updatedEntryBody["created_at"] = new Date()
-  updatedEntryBody.final_score = final_score
-  updatedEntryBody.user_score = multiplier
 
   try {
-    const createdRatingData = await Prisma.rating.create({ data: updatedEntryBody as Rating });
-    reply.send(createdRatingData);
-  } catch {
-    reply.status(500).send({ msg: "Error creating rating" });
+    const rating = await createNewRating(req.body.actual_score, req.body.user_id, req.body.to_story_id)
+    const story = await propagateRatingToStory(rating);
+    await propagateRatingToUser(story.user_id);
+    reply.send({ msg: 'Successfully updated rating and propagated' });
+  } catch (e) {
+    reply.status(500).send({msg: e})
   }
-
-  // Now we update the story then the users rating
-  try {
-    let ratingCount = await Prisma.rating.count(
-      {
-        where: {
-          to_story_id: updatedEntryBody.to_story_id
-        }
-      }
-    )
-    var new_rating;
-    if(story.rating)
-      new_rating = (story.rating * ratingCount + final_score / 5) / (ratingCount + 1)
-    else{
-      new_rating = final_score / 5
-    }
-    const createdRatingData = await Prisma.story.update(
-      {
-        data: {rating:new_rating },
-        where: { id: story?.id },
-  });
-    reply.send(createdRatingData);
-  } catch {
-    reply.status(500).send({ msg: "Error updating story" });
-  }
-  try {
-    let storyCount = await Prisma.rating.count(
-      {
-        where: {
-          to_story_id: updatedEntryBody.to_story_id
-        }
-      }
-    )
-    if(!new_rating){
-      throw Error('Somethign went wrong :/')
-    }
-    if(to_user?.rating){
-      if(!story.rating){
-        story.rating = to_user.rating
-      }
-      new_rating = (to_user.rating * storyCount - story.rating  + new_rating) / (storyCount)
-    }
-    const createdRatingData = await Prisma.user.update(
-      {
-        data: {rating: new_rating},
-        where: { id: to_user.id },
-  });
-    reply.send(createdRatingData);
-  } catch {
-    reply.status(500).send({ msg: "Error updating user" });
-  }
-
-
 });
 
 // needs to check password  - needs to update rating weights also
 server.delete<{ Params: { id: string } }>("/rating/delete/:id", { preHandler: verifyToken }, async (req, reply) => {
   try {
-    await Prisma.rating.delete({ where: { id: req.params.id } });
+    const storyId = await deleteRating(req.params.id)
+    const story = await updateStoryBlind(storyId);
+    await propagateRatingToUser(story.user_id);
     reply.send({ msg: "Deleted successfully" });
-  } catch {
-    reply.status(500).send({ msg: "Error deleting rating" });
+
+  } catch (e) {
+    reply.status(500).send({msg: e})
   }
 });
 
 // needs to check password - needs to update rating weights also
 server.put<{ Params: { id: string }; Body: Rating }>("/rating/update/:id", { preHandler: verifyToken }, async (req, reply) => {
   try {
-    await Prisma.rating.update({
-      data: req.body,
-      where: { id: req.params.id },
-    });
-    reply.send({ msg: "Updated successfully" });
-  } catch {
-    reply.status(500).send({ msg: "Error updating" });
+    const rating = await updateRating(req.body.actual_score, req.params.id, req.body.user_id)
+    const story = await propagateRatingToStory(rating, true);
+    await propagateRatingToUser(story.user_id);
+    reply.send({ msg: 'Successfully updated rating and propagated' });
+  } catch (e) {
+    reply.status(500).send({msg: e})
   }
 });
