@@ -77,6 +77,7 @@ server.delete<{ Params: { id: string } }>("/user/delete/:id", { preHandler: veri
     await Prisma.user.delete({ where: { id: req.params.id } });
     for(const rating of ratings){
       updateStoryBlind(rating.to_story_id);
+      // For now we aren;t updating the users score on deletion immediately
     }
     reply.send({ msg: "Deleted successfully" });
   } catch (e) {
@@ -150,7 +151,9 @@ server.delete<{ Params: { id: string } }>("/stories/delete/:id", { preHandler: v
   try {
     const story = await Prisma.story.findUnique({ where: { id: req.params.id } })
     await Prisma.story.delete({ where: { id: req.params.id } });
-    if(story?.user_id) propagateRatingToUser(story?.user_id) // update relevant ratings
+    if(story?.user_id) {
+      await propagateRatingToUser(story?.user_id) // update relevant ratings
+    }
     reply.send({ msg: "Deleted successfully" });
   } catch {
     reply.status(500).send({ msg: "Error deleting Story" });
@@ -217,7 +220,7 @@ server.post<{ Body: {actual_score: number, user_id: string, to_story_id: string}
     const rating = await createNewRating(req.body.actual_score, req.body.user_id, req.body.to_story_id)
     const story = await propagateRatingToStory(rating);
     await propagateRatingToUser(story.user_id);
-    reply.send({ msg: 'Successfully updated rating and propagated' });
+    reply.send({ msg: 'Successfully updated rating and propagated', rating });
   } catch (e) {
     reply.status(500).send({msg: e})
   }

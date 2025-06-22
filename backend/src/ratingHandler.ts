@@ -144,7 +144,7 @@ export async function propagateRatingToUser(userId: string) {
     })
     return updatedUserRating
   } catch (e) {
-    throw new Error(`Error updating story: ${e}` )
+    throw new Error(`Error updating story: ${e}, userid: ${userId}` )
   }
 }
 // -- Helper functions
