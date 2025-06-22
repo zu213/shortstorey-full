@@ -47,8 +47,7 @@ export default {
         passwordHash: this.password
       }
       try {
-        // TODO
-        const result = await createUser(userToCreate, this.auth.token)
+        const result = await createUser(userToCreate)
         console.log('Update successful:', result)
       } catch (err) {
         console.error('Update failed:', err)

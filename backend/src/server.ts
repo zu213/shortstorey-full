@@ -28,14 +28,25 @@ server.post<{ Body: {name: string, passGuess: string}, Reply: Object }>("/login"
 
 // needs password change
 // not real endpoint
-server.get<{ Reply: User[] }>("/user", async (req, reply) => {
-  const dbAllEntries = await Prisma.user.findMany({});
+server.get<{}>("/user", async (req, reply) => {
+  const dbAllEntries = await Prisma.user.findMany({
+    select: {
+      id: true,
+      name: true,
+      rating: true,
+    }
+  });
   reply.send(dbAllEntries);
 });
 
 server.get<{ Body: User, Params: { id: string } }>("/user/:id", async (req, reply) => {
   const dbEntry = await Prisma.user.findUnique({
     where: { id: req.params.id },
+    select: {
+      id: true,
+      name: true,
+      rating: true,
+    },
   });
   if (!dbEntry) {
     reply.status(500).send({ msg: `Error finding User with id ${req.params.id}` });
@@ -44,7 +55,6 @@ server.get<{ Body: User, Params: { id: string } }>("/user/:id", async (req, repl
   reply.send(dbEntry);
 });
 
-// need to add check if username already exists
 server.post<{ Body: User }>("/user/create", async (req, reply) => {
   if(await Prisma.user.findFirst({where: {name: req.body.name}})){
     return reply.status(500).send({msg: "Username already taken"})
@@ -63,7 +73,6 @@ server.post<{ Body: User }>("/user/create", async (req, reply) => {
 // needs to check password
 server.delete<{ Params: { id: string } }>("/user/delete/:id", { preHandler: verifyToken }, async (req, reply) => {
   try {
-    // get the ratings the user left
     const ratings = await Prisma.rating.findMany({ where: { user_id: req.params.id } })
     await Prisma.user.delete({ where: { id: req.params.id } });
     for(const rating of ratings){
@@ -76,7 +85,6 @@ server.delete<{ Params: { id: string } }>("/user/delete/:id", { preHandler: veri
   }
 });
 
-// needs to check password
 server.put<{ Params: { id: string }; Body: {id: string, name: string | undefined, password: string | undefined} }>("/user/update/:id", { preHandler: verifyToken }, async (req, reply) => {
   try {
     const { name, password: passwordHash } = req.body
@@ -101,21 +109,13 @@ server.get<{ Reply: Story[] }>("/stories", { schema: storiesQuerySchema }, async
     dbAllEntries = await Prisma.story.findMany({
       where: req.query,
       include: {
-        user: {
-          select: {
-            name: true
-          }
-        }
+        user: { select: { name: true } }
       }
     });
   }else{
     dbAllEntries = await Prisma.story.findMany({
-      include: {
-        user: {
-          select: {
-            name: true
-          }
-        }
+      include: { 
+        user: { select: { name: true } }
       }
     });
   }
@@ -126,11 +126,7 @@ server.get<{ Body: Story; Params: { id: string } }>("/stories/:id", async (req, 
   const dbEntry = await Prisma.story.findUnique({
     where: { id: req.params.id },
     include: {
-      user: {
-        select: {
-          name: true,
-        }
-      },
+      user: { select: { name: true } }
     },
   });
   if (!dbEntry) {
@@ -139,7 +135,6 @@ server.get<{ Body: Story; Params: { id: string } }>("/stories/:id", async (req, 
   reply.send(dbEntry);
 });
 
-// needs to check password - wht I'll check works first
 server.post<{ Body: Story }>("/stories/create", { preHandler: verifyToken }, async (req, reply) => {
   let updatedEntryBody = req.body;
   updatedEntryBody.created_at = new Date()
@@ -151,19 +146,17 @@ server.post<{ Body: Story }>("/stories/create", { preHandler: verifyToken }, asy
   }
 });
 
-// needs to check password
 server.delete<{ Params: { id: string } }>("/stories/delete/:id", { preHandler: verifyToken }, async (req, reply) => {
   try {
     const story = await Prisma.story.findUnique({ where: { id: req.params.id } })
     await Prisma.story.delete({ where: { id: req.params.id } });
-    if(story?.user_id) propagateRatingToUser(story?.user_id)
+    if(story?.user_id) propagateRatingToUser(story?.user_id) // update relevant ratings
     reply.send({ msg: "Deleted successfully" });
   } catch {
     reply.status(500).send({ msg: "Error deleting Story" });
   }
 });
 
-// needs to check password
 server.put<{ Params: { id: string }; Body: Story }>("/stories/update/:id", { preHandler: verifyToken }, async (req, reply) => {
   try {
     await Prisma.story.update({
@@ -200,6 +193,7 @@ server.get<{ Body: Rating, Params: { id: string } }>("/rating/:id", async (req, 
   reply.send(dbEntry);
 });
 
+// Check if a specific user left a rating ona  specific story
 server.get<{ Params: { storyid: string, userid: string }}>("/rating/:storyid/:userid", async (req, reply) => {
   const existing = await Prisma.rating.findFirst({
     where: {
@@ -211,7 +205,6 @@ server.get<{ Params: { storyid: string, userid: string }}>("/rating/:storyid/:us
 });
 
 server.post<{ Body: {actual_score: number, user_id: string, to_story_id: string} }>("/rating/create", { preHandler: verifyToken }, async (req, reply) => {
-
   if(req.body.actual_score < 0 || req.body.actual_score > 5){
     throw Error('Invalid score given')
   }
