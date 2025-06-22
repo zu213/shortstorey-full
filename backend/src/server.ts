@@ -46,6 +46,9 @@ server.get<{ Body: User, Params: { id: string } }>("/user/:id", async (req, repl
 
 // need to add check if username already exists
 server.post<{ Body: User }>("/user/create", async (req, reply) => {
+  if(await Prisma.user.findFirst({where: {name: req.body.name}})){
+    return reply.status(500).send({msg: "Username already taken"})
+  }
   let password = await bcrypt.hash(req.body.passwordHash, 10);
   let userCreateBody = {name: req.body.name, passwordHash: password};
   try {

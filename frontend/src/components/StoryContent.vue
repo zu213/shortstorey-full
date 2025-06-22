@@ -65,7 +65,6 @@ export default {
   },
   methods: {
     async submitRating(rating){
-      console.log(this.auth.token)
       const ratingDetails = {
         actual_score: rating,
         to_story_id: this.story.id,

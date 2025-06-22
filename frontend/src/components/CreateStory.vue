@@ -47,7 +47,6 @@ export default {
         user_id: this.auth.getUserId
       }
       try {
-        console.log(storyDetails)
         const result = await addStory(storyDetails, this.auth.token)
         console.log('Update successful:', result)
       } catch (err) {

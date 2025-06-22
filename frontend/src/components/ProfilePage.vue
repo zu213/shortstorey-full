@@ -12,7 +12,12 @@
         <input type="text" v-model="password" name="fpassword" />
       </div>
       <input type="submit" value="Update" />
-    </form> 
+    </form>
+    <div>
+      <button @click="sendDeleteUser">
+        delete account
+      </button>
+    </div>
     </div>
     <div>
       Your stories:
@@ -28,7 +33,7 @@ import StoryCard from './StoryCard.vue'
 </script>
 
 <script>
-import { getUser, updateUser } from '../bridge/bridge.js'
+import { getUser, updateUser, deleteUser } from '../bridge/bridge.js'
 import { useAuthStore } from '@/store/auth'
 import { getStories } from '../bridge/bridge.js'
 
@@ -69,6 +74,11 @@ export default {
       } catch (err) {
         console.error('Update failed:', err)
       }
+    },
+    sendDeleteUser(){
+      deleteUser(this.auth.token, this.user.id)
+      this.auth.logOut()
+      this.$router.push('/')
     }
   }
 }

@@ -90,7 +90,6 @@ export default {
       }
       const alreadyExists  = await checkRating(this.auth.getUserId, this.story.id)
       try {
-        console.log(ratingDetails)
         const result = alreadyExists.exists ? await putRating(ratingDetails, this.auth.token, alreadyExists.exists?.id) : await postRating(ratingDetails, this.auth.token)
         console.log('Update successful:', result)
       } catch (err) {

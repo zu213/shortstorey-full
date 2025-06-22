@@ -71,7 +71,6 @@ async function checkIdFromRequest(request: any, userId: string) {
       idToCheck = request.params.id
     }
   }
-  console.log(idToCheck, url, request.method)
   if(idToCheck == null) return true
   return userId === idToCheck
 }

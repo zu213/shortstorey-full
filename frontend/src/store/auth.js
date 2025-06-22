@@ -13,7 +13,6 @@ export const useAuthStore = defineStore('auth', {
     logIn({token, username, userId}) {
       this.token = token
       this.userId = userId
-      console.log(userId)
       localStorage.setItem('token', token)
       localStorage.setItem('username', username)
       localStorage.setItem('userId', userId)
@@ -25,8 +24,6 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('token')
       localStorage.removeItem('username')
       localStorage.removeItem('userId')
-      console.log(this.userId)
-
     }
   }
 })

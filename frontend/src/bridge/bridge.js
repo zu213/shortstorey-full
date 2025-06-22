@@ -54,7 +54,6 @@ export async function getUser(id){
 }
 
 export async function updateUser(newUser, token){
-  console.log(newUser, token)
   const response = await fetch(`/user/update/${newUser.id}`, {
     method: 'PUT',
     headers: {
@@ -85,11 +84,23 @@ export async function createUser(newUser){
   return json
 }
 
+export async function deleteUser(token, id){
+  const response = await fetch(`/user/delete/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  })
+
+  const json = await response.json()
+  if(!response.ok) throw new Error(`nope ${json.message}`)
+  return json
+}
+
+
 // login
 
 export async function attemptLogin(username, password){
-
-  console.log('test')
   const response = await fetch('/login', {
     method: 'POST',
     headers: {

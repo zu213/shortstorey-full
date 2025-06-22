@@ -141,7 +141,6 @@ export async function updateStoryBlind(storyId: string){
       data: { rating: await calculateRatingFromScratch(storyId) },
       where: { id: storyId },
     });
-    console.log('test')
     return updatedStoryRating;
   } catch(e) {
     throw new Error(`Error updating story: ${e}` );
