@@ -29,13 +29,19 @@
       <button @click="submitRating(5)">
         5
       </button>
+
+      <div>
+      <button @click="deleteStory">
+        delete story
+      </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 
-import { getStory, postRating, putRating, checkRating } from '../bridge/bridge.js'
+import { getStory, deleteStory, postRating, putRating, checkRating } from '../bridge/bridge.js'
 import { useAuthStore } from '@/store/auth'
 
 export default {
@@ -69,6 +75,14 @@ export default {
       try {
         const result = alreadyExists.exists ? await putRating(ratingDetails, this.auth.token, alreadyExists.exists?.id) : await postRating(ratingDetails, this.auth.token)
         console.log('Update successful:', result)
+      } catch (err) {
+        alert(err)
+        console.error('Update failed:', err)
+      }
+    },
+    async deleteStory(){
+      try {
+        await deleteStory(this.auth.token, this.story.id)
       } catch (err) {
         alert(err)
         console.error('Update failed:', err)

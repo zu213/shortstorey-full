@@ -41,6 +41,9 @@
       <button @click="submitRating(5)">
         5
       </button>
+      <button @click="deleteRating">
+        delete
+      </button>
     </div>
   </div>
   <div v-else>
@@ -50,7 +53,7 @@
 
 <script>
 
-import { getStory, getRatings, postRating, putRating, checkRating } from '../bridge/bridge.js'
+import { getStory, getRatings, postRating, putRating, checkRating, deleteRating } from '../bridge/bridge.js'
 import { useAuthStore } from '@/store/auth'
 
 export default {
@@ -69,7 +72,7 @@ export default {
     this.story = await getStory(id)
     this.totalRating = this.story.rating
     this.auth = useAuthStore()
-    this.userRating = await getRatings(`to_story_id=${id}&user_id=${this.auth.getUserId}`)
+    this.userRating = (await getRatings(`to_story_id=${id}&user_id=${this.auth.getUserId}`))[0]
     this.ratings = await getRatings(`to_story_id=${id}`)
   },
   computed: {
@@ -90,6 +93,14 @@ export default {
         console.log(ratingDetails)
         const result = alreadyExists.exists ? await putRating(ratingDetails, this.auth.token, alreadyExists.exists?.id) : await postRating(ratingDetails, this.auth.token)
         console.log('Update successful:', result)
+      } catch (err) {
+        alert(err)
+        console.error('Update failed:', err)
+      }
+    },
+    async deleteRating(){
+      try {
+        await deleteRating(this.auth.token, this.userRating.id)
       } catch (err) {
         alert(err)
         console.error('Update failed:', err)

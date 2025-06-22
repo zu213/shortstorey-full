@@ -31,6 +31,19 @@ export async function addStory(newStory, token){
   return json
 }
 
+export async function deleteStory(token, id){
+  const response = await fetch(`/stories/delete/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  })
+
+  const json = await response.json()
+  if(!response.ok) throw new Error(`nope ${json.message}`)
+  return json
+}
+
 // Users
 
 export async function getUser(id){
@@ -132,6 +145,19 @@ export async function putRating(rating, token, id){
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(rating)
+  })
+
+  const json = await response.json()
+  if(!response.ok) throw new Error(`nope ${json.message}`)
+  return json
+}
+
+export async function deleteRating(token, id){
+  const response = await fetch(`/rating/delete/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
   })
 
   const json = await response.json()

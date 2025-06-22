@@ -60,10 +60,16 @@ server.post<{ Body: User }>("/user/create", async (req, reply) => {
 // needs to check password
 server.delete<{ Params: { id: string } }>("/user/delete/:id", { preHandler: verifyToken }, async (req, reply) => {
   try {
+    // get the ratings the user left
+    const ratings = await Prisma.rating.findMany({ where: { user_id: req.params.id } })
     await Prisma.user.delete({ where: { id: req.params.id } });
+    for(const rating of ratings){
+      updateStoryBlind(rating.to_story_id);
+    }
     reply.send({ msg: "Deleted successfully" });
-  } catch {
-    reply.status(500).send({ msg: "Error deleting User" });
+  } catch (e) {
+    console.log(e)
+    reply.status(500).send({ msg: e });
   }
 });
 
@@ -145,7 +151,9 @@ server.post<{ Body: Story }>("/stories/create", { preHandler: verifyToken }, asy
 // needs to check password
 server.delete<{ Params: { id: string } }>("/stories/delete/:id", { preHandler: verifyToken }, async (req, reply) => {
   try {
+    const story = await Prisma.story.findUnique({ where: { id: req.params.id } })
     await Prisma.story.delete({ where: { id: req.params.id } });
+    if(story?.user_id) propagateRatingToUser(story?.user_id)
     reply.send({ msg: "Deleted successfully" });
   } catch {
     reply.status(500).send({ msg: "Error deleting Story" });
@@ -228,6 +236,7 @@ server.delete<{ Params: { id: string } }>("/rating/delete/:id", { preHandler: ve
     reply.send({ msg: "Deleted successfully" });
 
   } catch (e) {
+    console.log(e)
     reply.status(500).send({msg: e})
   }
 });

@@ -103,7 +103,9 @@ export async function propagateRatingToStory(rating: Rating, updateToRating = fa
   });
 
   var newRating
-  if(ratingCount < 2) {
+  if(ratingCount < 1){
+    newRating = null
+  } else if(ratingCount < 2) {
     // if first rating, early return
     newRating = rating.actual_score / 5
   } else if(story.rating) {
@@ -127,8 +129,8 @@ export async function propagateRatingToStory(rating: Rating, updateToRating = fa
       where: { id: story?.id },
     });
     return updatedStoryRating;
-  } catch {
-    throw new Error("Error updating story" );
+  } catch(e) {
+    throw new Error(`Error updating story: ${e}` );
   }
 }
 
@@ -141,8 +143,8 @@ export async function updateStoryBlind(storyId: string){
     });
     console.log('test')
     return updatedStoryRating;
-  } catch {
-    throw new Error("Error updating story" );
+  } catch(e) {
+    throw new Error(`Error updating story: ${e}` );
   }
 }
 
@@ -163,9 +165,10 @@ export async function propagateRatingToUser(userId: string) {
      }
   })
 
-  if(ratedStories.length == 0) throw new Error(`No stories with any rating belong to user ${userId}`)
-
-  const average = ratedStories.reduce((total, next) => total + next.rating!, 0) / ratedStories.length
+  var average = null
+  if(ratedStories.length != 0) {
+     average = ratedStories.reduce((total, next) => total + next.rating!, 0) / ratedStories.length
+  }
 
   try{
     const updatedUserRating = await Prisma.user.update(
@@ -174,8 +177,8 @@ export async function propagateRatingToUser(userId: string) {
       where: { id: userId },
     });
     return updatedUserRating;
-  } catch {
-    throw new Error("Error updating story" );
+  } catch (e) {
+    throw new Error(`Error updating story: ${e}` );
   }
 }
 
@@ -186,10 +189,11 @@ function calculateRating(storyRating: number, ratingCount: number, newRating: nu
 }
 
 async function calculateRatingFromScratch(toStoryId: string){
-  var newRating
+  var newRating = null
   const allRatings = await Prisma.rating.findMany({
     where: { to_story_id: toStoryId}
   });
+  if(allRatings.length < 1) return newRating
   newRating = allRatings[0].actual_score / 5
   for(var i = 1; i < allRatings.length; i++){
     newRating = calculateRating(newRating, i + 1, allRatings[i].actual_score, allRatings[i].rating_power)
