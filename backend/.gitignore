@@ -3,4 +3,4 @@
 *.toml
 package-lock.json
 *.sql
-*.env
+*.env*
