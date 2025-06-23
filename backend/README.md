@@ -4,6 +4,7 @@ Backend for a future short story sharing platform.
 
 This project uses Prisma to set up a database that supports a **rating system**. In this system, a user's credibility depends on the ratings given to their stories. However, the ratings that users give are also weighted by their own credibility score. New users are assigned the database's average credibility rating.
 
+This is cutoff at the rating level in the database, raw ratings are stored and are unaffected by scores, only, this could potentially cause issues with viewing individual ratings, however, this is aimed mroe to be a like a liking system as opposed to a convential reviewing system and comments (if implemented) would exist seperately.
 
 ## Running Locally
 

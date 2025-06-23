@@ -1,26 +1,8 @@
 import Prisma from "../src/db";
-import { User, Rating, Story } from '@prisma/client'
+import { Story } from '@prisma/client'
 import { server } from "../src/server";
 import 'jest-expect-message';
 import bcrypt from 'bcrypt'
-
-var created_users: Return_User[] = [];
-var created_stories: Return_Story[] = []
-var created_ratings: Return_Rating[] = []
-
-
-
-type Return_User = {
-  id: string
-}
-
-type Return_Story = {
-  id: string
-}
-
-type Return_Rating = {
-  id: string
-}
 
 async function createUser(name = "Placeholder", password = 'password'): Promise<any> {
   const user = await Prisma.user.create({
@@ -29,7 +11,6 @@ async function createUser(name = "Placeholder", password = 'password'): Promise<
       passwordHash: (await bcrypt.hash(password, 10))
     },
   });
-  created_users.push(user); // to be removed
 
   return user
 }
@@ -267,7 +248,7 @@ test("POST: Create story", async () => {
 })
 
 test("POST: Try to create story for non-existent user", async () => {
-  const {user, token} = await createUserAndLogin('user1', 'password')
+  const {user: _, token} = await createUserAndLogin('user1', 'password')
   const request = {
     title: `story`,
     content: 'content',
@@ -287,7 +268,7 @@ test("POST: Try to create story for non-existent user", async () => {
 })
 
 test("PUT: Try to update story", async () => {
-  const {user, story} = await createUserWithStory('user', 'password')
+  const {user: _, story} = await createUserWithStory('user', 'password')
   const token = await loginUser('user', 'password')
   const request = {
     title: `new title`,
@@ -307,7 +288,7 @@ test("PUT: Try to update story", async () => {
 })
 
 test("PUT: Try to update story to another user", async () => {
-  const {user, story} = await createUserWithStory('user', 'password')
+  const {user: _, story} = await createUserWithStory('user', 'password')
   const token = await loginUser('user', 'password')
   
   const request = {
@@ -330,7 +311,7 @@ test("PUT: Try to update story to another user", async () => {
 
 test("DELETE: delete story and check user rating adjust", async () => {
   var {user: user1, story} = await createUserWithStory('user1', 'password')
-  const {user: user2} = await createUserAndRate('user2', 'password', story, 1)
+  await createUserAndRate('user2', 'password', story, 1)
   const user1Token = await loginUser('user1', 'password')
 
   user1 = await Prisma.user.findFirst({
@@ -362,24 +343,90 @@ test("DELETE: delete story and check user rating adjust", async () => {
 //** Rating endpoint tests */
 
 test("POST: Create rating and check story/user updates", async () => {
+  let {user: user1, story} = await createUserWithStory('user1', 'password')
+  let {user: user2, token: user2Token} = await createUserAndLogin('user2', 'password')
 
-})
-
-test("POST: Create third rating and check story/user updates", async () => {
-
+  const request = {
+    actual_score: 3,
+    user_id: user2.id,
+    to_story_id: story.id
+  };
+  const response = await server.inject({
+    method: "POST",
+    url: `/rating/create`,
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${user2Token}`,
+    },
+    payload: request
+  });
+  expect(response.statusCode, 'Failed at users').toEqual(200)
+  story = (await Prisma.story.findFirst({
+    where: {
+      id: story.id
+    },
+  }) as Story);
+  expect(story.rating).toEqual(0.6)
+  user1 = await Prisma.user.findFirst({
+    where: {
+      id: user1.id
+    },
+  });
+  expect(user1.rating).toEqual(0.6)
 })
 
 test("PUT: Try to update rating and check propagation", async () => {
+  let {user: user1, story} = await createUserWithStory('user1', 'password')
+  const {user: user2, rating: rating1} = await createUserAndRate('user2', 'password', story, 3)
+  const user2Token = await loginUser('user2', 'password')
 
-})
+  story = (await Prisma.story.findFirst({
+    where: {
+      id: story.id
+    },
+  }) as Story);
+  expect(story.rating).toEqual(0.6)
+  user1 = await Prisma.user.findFirst({
+    where: {
+      id: user1.id
+    },
+  });
+  expect(user1.rating).toEqual(0.6)
 
-test("PUT: Try to update story to another story / user", async () => {
-
+  const request = {
+    actual_score: 1,
+    user_id: user2.id,
+    to_story_id: story.id
+  };
+  const response = await server.inject({
+    method: "PUT",
+    url: `/rating/update/${rating1.id}`,
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${user2Token}`,
+    },
+    payload: request
+  });
+  expect(response.statusCode, 'Failed at users').toEqual(200)
+  story = (await Prisma.story.findFirst({
+    where: {
+      id: story.id
+    },
+  }) as Story);
+  expect(story.rating).toEqual(0.2)
+  user1 = await Prisma.user.findFirst({
+    where: {
+      id: user1.id
+    },
+  });
+  expect(user1.rating).toEqual(0.2)
 })
 
 test("DELETE: delete rating and check user/story rating adjust", async () => {
-var {user: user1, story} = await createUserWithStory('user1', 'password')
-  const {user: user2, rating: rating1} = await createUserAndRate('user2', 'password', story, 1)
+  let {user: user1, story} = await createUserWithStory('user1', 'password')
+  const {user: _, rating: rating1} = await createUserAndRate('user2', 'password', story, 1)
   const user2Token = await loginUser('user2', 'password')
 
   user1 = await Prisma.user.findFirst({
@@ -406,112 +453,3 @@ var {user: user1, story} = await createUserWithStory('user1', 'password')
   });
   expect(user1.rating).toEqual(null)
 })
-
-
-//** Old tests */
-
-test.skip("Simulated database example, add user and scores update", async () => {
-  
-  // Populate database with users
-  for(var i = 0; i < 5; i++){
-    const request = {
-      name: `newUser-${i}`,
-      passwordHash: 'throwaway'
-    };
-
-    const response = await server.inject({
-      method: "POST",
-      url: "/user/create",
-      payload: request,
-    });
-    expect(response.statusCode, 'Failed at users').toEqual(200);
-    
-    const body = JSON.parse(response.body);
-    created_users.push(body);
-  }
-
-  // create some stories for user 1
-  for(var i = 0; i < 2; i++){
-    const request:any = {
-      title: `Story-${i}`,
-      content: '',
-      user_id: created_users[0].id
-    };
-
-    const response = await server.inject({
-      method: "POST",
-      url: "/stories/create",
-      payload: request,
-    });
-    expect(response.statusCode, 'Failed at stories').toEqual(200);
-    
-    const body = JSON.parse(response.body);
-    created_stories.push(body);
-
-  }
-
-  // create some stories for user 2
-  for(var i = 0; i < 2; i++){
-    const request:any = {
-      title: `Story-${i}`,
-      content: '',
-      user_id: created_users[1].id
-    };
-
-    const response = await server.inject({
-      method: "POST",
-      url: "/stories/create",
-      payload: request,
-    });
-    expect(response.statusCode, 'Failed at stories').toEqual(200);
-    
-    const body = JSON.parse(response.body);
-    created_stories.push(body);
-
-  }
-
-  // Now give some ratings
-  for(var i = 1; i < 5; i++){
-    const request:any = {
-      actual_score: i,
-      user_id: created_users[i].id,
-      to_story_id: created_stories[0].id
-    };
-
-    const response = await server.inject({
-      method: "POST",
-      url: "/rating/create",
-      payload: request,
-    });
-    expect(response.statusCode, 'Failed at ratings').toEqual(200);
-    
-    const body = JSON.parse(response.body);
-    created_ratings.push(body);
-
-  }
-
-    // Now give some ratings after people have recieved ratings
-    for(var i = 0; i < 4; i++){
-      if(i == 1){
-        continue
-      }
-      const request:any = {
-        actual_score: i,
-        user_id: created_users[i].id,
-        to_story_id: created_stories[2].id
-      };
-  
-      const response = await server.inject({
-        method: "POST",
-        url: "/rating/create",
-        payload: request,
-      });
-      expect(response.statusCode, 'Failed at ratings2').toEqual(200);
-      
-      const body = JSON.parse(response.body);
-      created_ratings.push(body);
-  
-    }
-    
-
-});
