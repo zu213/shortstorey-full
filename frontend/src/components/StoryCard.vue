@@ -40,6 +40,16 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style scoped  lang="scss">
+.storyCard {
+  width: 90%;
+  height: 20vh;
+  min-height: 50px;
+  padding: 4%;
+  border-radius: 10px;
+  margin: 2% 2%;
+  text-align: left;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
 </style>

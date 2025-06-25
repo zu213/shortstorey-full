@@ -21,8 +21,10 @@
     </div>
     <div>
       Your stories:
-      <div v-for="(story, i) in stories" :key="i">
-        <StoryCard :story="story" />
+      <div  class="storyDisplay">
+        <div v-for="(story, i) in stories" :key="i">
+          <StoryCard :story="story" />
+        </div>
       </div>
     </div>
   </div>

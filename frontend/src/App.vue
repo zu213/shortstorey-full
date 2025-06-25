@@ -5,7 +5,7 @@
 
 <script>
 import TopBar from './components/TopBar.vue'
-import '@/styles/main.sass'
+import '@/styles/main.scss'
 
 export default {
   name: 'App',

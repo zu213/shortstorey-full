@@ -1,7 +1,7 @@
 <template>
   <div v-if="isAuthenticated" class="createStory">
     create a story here!
-    <form @submit.prevent="submitStoryForm">
+    <form class="createStory__form" @submit.prevent="submitStoryForm">
       <div>
         <label for="ftitle">Title:</label>
         <input type="text" v-model="title" name="ftitle" />
@@ -58,5 +58,17 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style scoped lang="scss">
+.createStory {
+  width: 80vw;
+  text-align: left;
+  left: 10vw;
+  height: 150vh;
+  position: relative;
+
+  &__form{
+    height: 100%;
+  }
+}
+
 </style>
