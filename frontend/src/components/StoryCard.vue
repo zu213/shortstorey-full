@@ -1,5 +1,5 @@
 <template>
-  <div class="storyCard">
+  <div class="story-card">
     <router-link :to="`/readstory/${story.id}`">
       <div>
         <h1>{{ story.title }}</h1>
@@ -41,7 +41,7 @@ export default {
 </script>
 
 <style scoped  lang="scss">
-.storyCard {
+.story-card {
   width: 90%;
   height: 20vh;
   min-height: 50px;

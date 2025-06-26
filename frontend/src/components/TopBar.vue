@@ -1,12 +1,12 @@
 <template>
     <header class="top-bar">
-      <img alt="Main logo" class="logo" src="../assets/logo.png">
-      <h1>Short Storey</h1>
-      <nav>
-        <router-link to="/">Home</router-link>
-        <router-link to="/scribe">Create</router-link>
-        <router-link v-if="isAuthenticated" to="/profile">Profile</router-link>
-        <router-link v-if="!isAuthenticated" to="/loginPage">Login</router-link>
+      <img alt="Main logo" class="top-bar__logo" src="../assets/logo.png">
+      <h1 class="top-bar__heading">Short Storey</h1>
+      <nav class="top-bar__nav">
+        <router-link class="top-bar__link" to="/">Home</router-link>
+        <router-link class="top-bar__link" to="/scribe">Create</router-link>
+        <router-link class="top-bar__link" v-if="isAuthenticated" to="/profile">Profile</router-link>
+        <router-link class="top-bar__link" v-if="!isAuthenticated" to="/loginPage">Login</router-link>
         <button v-if="isAuthenticated" @click="logOut">Log out</button>
       </nav>
     </header>
@@ -40,21 +40,34 @@ export default {
 }
 </script>
   
-  <style scoped>
+  <style scoped lang="scss">
   .top-bar {
     background: #333;
     color: white;
     padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &__logo {
+      max-width: 50px;
+      aspect-ratio: 1;
+    }
+
+    &__heading {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    &__nav {
+      justify-content: end;
+    }
+
   }
   nav a {
     margin-right: 1rem;
     color: white;
-  }
-  .logo {
-    max-width: 200px;
-    height: 20vh;
-    width: 20vh;
-    aspect-ratio: 1;
   }
   </style>
   

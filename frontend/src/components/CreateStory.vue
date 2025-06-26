@@ -1,16 +1,18 @@
 <template>
-  <div v-if="isAuthenticated" class="createStory">
-    create a story here!
-    <form class="createStory__form" @submit.prevent="submitStoryForm">
-      <div>
+  <div v-if="isAuthenticated" class="create-story">
+    <h2 class="create-story__subtitle">
+      Create a story here!
+    </h2>
+    <form class="create-story__form" @submit.prevent="submitStoryForm">
+      <div class="form__title">
         <label for="ftitle">Title:</label>
         <input type="text" v-model="title" name="ftitle" />
       </div>
-      <div>
+      <div class="form__content">
         <label for="fcontent">Content:</label>
         <input type="text" v-model="content" name="fcontent" />
       </div>
-      <input type="submit" value="Update" />
+      <input class="form__submit" type="submit" value="Update" />
     </form> 
   </div>
   <div v-else>
@@ -59,15 +61,48 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.createStory {
+.create-story {
   width: 80vw;
   text-align: left;
   left: 10vw;
   height: 150vh;
   position: relative;
 
+  &__subtitle {
+    text-align: center;
+    width: calc(100% - 10px);
+    padding: 10px;
+  }
+
   &__form{
+    box-sizing: border-box;
     height: 100%;
+  }
+}
+
+.form {
+
+  &__title, &__content {
+    width: 100%;
+
+    label {
+      display: block;
+      width: 100%;
+      text-align: center;
+    }
+
+    input {
+      flex: 1;
+      padding: 2px;
+      box-sizing: border-box;
+    }
+  }
+
+  &__title input {
+    width: 50%;
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0%);
   }
 }
 

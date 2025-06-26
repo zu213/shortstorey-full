@@ -21,7 +21,7 @@
     </div>
     <div>
       Your stories:
-      <div  class="storyDisplay">
+      <div class="story-display">
         <div v-for="(story, i) in stories" :key="i">
           <StoryCard :story="story" />
         </div>

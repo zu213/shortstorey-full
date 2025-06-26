@@ -1,5 +1,6 @@
 <template>
-  <div class="storyDisplay">
+  <div class="story-display">
+    <h2>Stories</h2>
     <div v-for="(story, i) in stories" :key="i">
       <StoryCard :story="story" />
     </div>

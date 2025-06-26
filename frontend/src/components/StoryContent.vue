@@ -1,5 +1,5 @@
 <template>
-  <div class="storyContent" v-if="story">
+  <div class="story-content" v-if="story">
     <div>title {{ story.title }}</div>
     <div>content: {{ story.content }}</div>
     <div>user: 
@@ -93,7 +93,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.storyContent {
+.story-content {
   width: 50%;
 }
 </style>

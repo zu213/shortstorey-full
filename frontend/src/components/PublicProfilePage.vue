@@ -1,12 +1,10 @@
 <template>
   <div class="publicProfilePage">
-    <div>
+    <div class="story-display">
       {{ user?.name }} stories:
-      <ul>
-        <li v-for="(story, i) in stories" :key="i">
-          <StoryCard :story="story" />
-        </li>
-      </ul>
+      <div v-for="(story, i) in stories" :key="i">
+        <StoryCard :story="story" />
+      </div>
     </div>
   </div>
 </template>
@@ -28,13 +26,9 @@ export default {
       stories: []
     }
   },
-  computed: {
-    viewedUserId() {
-      return localStorage.getItem('userId')
-    },
-  },
   async created() {
-    this.user = await getUser(this.viewedUserId)
+    const id = this.$route.params.id
+    this.user = await getUser(id)
     this.stories = await getStories(`user_id=${this.user?.id}`)
   }
 }
