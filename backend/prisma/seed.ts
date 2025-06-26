@@ -7,7 +7,7 @@ async function insertUsers() {
   const passwordHash = await bcrypt.hash('password', 10)
   const alice = await prisma.user.create({
     data: {
-      name: 'Alice',
+      name: 'Bob',
       passwordHash: passwordHash,
       rating: 3
     },
@@ -19,7 +19,7 @@ async function insertUsers() {
 async function insertStories(users: User[]) {
   const story = await prisma.story.create({
     data: {
-      title: 'Alice\' story',
+      title: 'Bob\'s story',
       content: 'story content',
       user: {
         connect: { id: users[0].id }, // Correct way to relate to existing user

@@ -62,9 +62,9 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .create-story {
-  width: 80vw;
+  width: 80%;
   text-align: left;
-  left: 10vw;
+  left: 10%;
   height: 150vh;
   position: relative;
 

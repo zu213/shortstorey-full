@@ -3,7 +3,14 @@ button, .form__submit {
 }
 
 .story-display {
-  width: 50%;
+  width: 80%;
   position: relative;
-  left: 25%;
+  left: 10%;
+  padding-bottom: 10vh;
+
+  &--grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px; /* Adjust spacing between items */
+  }
 }

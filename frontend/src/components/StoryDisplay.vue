@@ -1,8 +1,8 @@
 <template>
   <div class="story-display">
     <h2>Stories</h2>
-    <div v-for="(story, i) in stories" :key="i">
-      <StoryCard :story="story" />
+    <div class="story-display--grid">
+      <StoryCard v-for="(story, i) in stories" :key="i" :story="story" />
     </div>
   </div>
 </template>
