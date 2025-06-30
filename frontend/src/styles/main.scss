@@ -1,3 +1,9 @@
+h1, h2, button, label {
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 body {
   margin: 0;
 }
@@ -15,6 +21,6 @@ button, .form__submit {
   &--grid{
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20px; /* Adjust spacing between items */
+    gap: 20px;
   }
 }

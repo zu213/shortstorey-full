@@ -10,7 +10,7 @@
       </div>
       <div class="form__content">
         <label for="fcontent">Content:</label>
-        <input type="text" v-model="content" name="fcontent" />
+        <QuillEditor style="height: 250px" v-model="content" :toolbar="toolbarOptions" theme="snow" />
       </div>
       <div>
         <input class="form__submit" type="submit" value="Post story" />
@@ -22,22 +22,35 @@
   </div>
 </template>
 
+<script setup>
+</script>
+
 <script>
+import { QuillEditor } from '@vueup/vue-quill'
 import { useAuthStore } from '@/store/auth'
 import { addStory } from '../bridge/bridge.js'
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
 
 export default {
   name: 'CreateStory',
+  components: {
+    QuillEditor
+  },
   data() {
     return {
       title: null,
-      content: null,
-      auth: null
+      content: '',
+      auth: null,
+      toolbarOptions: [
+        ['bold', 'italic', 'underline'],
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+        ['link', 'image'],
+      ]
     }
   },
   created() {
     this.auth = useAuthStore()
-  },  
+  },
   computed: {
     isAuthenticated() {
       return this.auth.isAuthenticated
@@ -63,17 +76,16 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+
 .create-story {
   width: 80%;
   text-align: left;
   left: 10%;
-  height: 150vh;
   position: relative;
 
   &__subtitle {
     text-align: center;
     width: calc(100% - 10px);
-    padding: 10px;
   }
 }
 
@@ -116,6 +128,7 @@ export default {
     position: relative;
     transform: translate(-50%, 0);
   }
+ 
 }
 
 </style>
