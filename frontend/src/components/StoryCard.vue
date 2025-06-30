@@ -13,7 +13,7 @@
         <router-link :to="`/ratingstory/${story.id}`">
           {{ story.rating ? `${story.rating * 5}/5` : 'No ratings yet'}}
         </router-link>
-        -- {{ story.created_at ?? '' }}
+        {{ friendlyTime  }}
       </div>
     </router-link>
   </div>
@@ -31,6 +31,17 @@ export default {
     currentUser() {
       // MAYBE MAKE ID ?
       return localStorage.getItem('username')
+    },
+    friendlyTime() {
+      if(!this.story?.created_at) return ''
+      const date = new Date(this.story.created_at);
+      console.log(typeof this.story.created_at)
+      const day = date.getUTCDate();
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const month = monthNames[date.getUTCMonth()];
+
+      return `-- ${day} ${month}`;
     }
   },
   props: {

@@ -34,6 +34,9 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style scoped lang="scss">
+.story-display {
+  width: 60%;
+  left: 20%;
+}
 </style>

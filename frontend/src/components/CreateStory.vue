@@ -3,7 +3,7 @@
     <h2 class="create-story__subtitle">
       Create a story here!
     </h2>
-    <form class="create-story__form" @submit.prevent="submitStoryForm">
+    <form class="form" @submit.prevent="submitStoryForm">
       <div class="form__title">
         <label for="ftitle">Title:</label>
         <input type="text" v-model="title" name="ftitle" />
@@ -12,7 +12,9 @@
         <label for="fcontent">Content:</label>
         <input type="text" v-model="content" name="fcontent" />
       </div>
-      <input class="form__submit" type="submit" value="Update" />
+      <div>
+        <input class="form__submit" type="submit" value="Post story" />
+      </div>
     </form> 
   </div>
   <div v-else>
@@ -73,14 +75,11 @@ export default {
     width: calc(100% - 10px);
     padding: 10px;
   }
-
-  &__form{
-    box-sizing: border-box;
-    height: 100%;
-  }
 }
 
 .form {
+  box-sizing: border-box;
+  height: 100%;
 
   &__title, &__content {
     width: 100%;
@@ -101,8 +100,21 @@ export default {
   &__title input {
     width: 50%;
     position: relative;
+    text-align: center;
     left: 50%;
     transform: translate(-50%, 0%);
+  }
+
+  &__content input {
+    width: 100%;
+  }
+
+  &__submit {
+    text-align: center;
+    left: 50%;
+    margin-top: 1em;
+    position: relative;
+    transform: translate(-50%, 0);
   }
 }
 
