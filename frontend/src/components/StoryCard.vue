@@ -5,7 +5,7 @@
       <div class="story-card__content">
         <div v-html="story.content" />
       </div>
-      <div class="story-card__footer">
+      <div class="story-card__footer" @click.prevent="">
         <router-link :to="`/profile/${story.user_id}`">
           {{ story.user?.name ?? 'No author found' }}
         </router-link>
@@ -67,6 +67,19 @@ export default {
   text-align: left;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 
+  :hover {
+    color: rgb(70, 75, 78);
+
+    .story-card__footer{
+        color: gray;
+    }
+  }
+
+  a {
+    text-decoration: none;
+    color: gray;
+  }
+
   &__content {
     max-height: 100px;
   }
@@ -74,11 +87,24 @@ export default {
   &__heading {
     padding: 3px 0px;
     margin: 4px 0px;
+
+
   }
 
   &__footer {
     padding: 3px 0px;
     padding-top: 8px;
+
+    color: gray;
+
+    :hover {
+      color: blue;
+    }
+
+    a { 
+      text-decoration: underline;
+      color: darkblue;
+    }
   }
 }
 

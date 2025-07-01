@@ -1,23 +1,23 @@
 <template>
   <div class="profile-page">
     <div class="profile-page__form" v-if="user?.name">
-      <h2 class="profile-page__form-title">Account details:</h2>
+      <h2 class="profile-page__form-title">Account details</h2>
       <form class="profile-page__form-form" @submit.prevent="submitUserForm">
         <span class="profile-page__form-span">
           <label for="fname">Name: </label>
           <input type="text" v-model="name" name="fname" :placeholder="user.name"/>
         </span>
         <span class="profile-page__form-span">
-          <label for="fpassword">Password:</label>
+          <label for="fpassword">Password: </label>
           <input type="text" v-model="password" name="fpassword" />
         </span>
         <div class="profile-page__form-button">
-          <input type="submit" value="Submit" />
+          <input class="form__submit" type="submit" value="Submit" />
         </div>
       </form>
     <div>
-      <button @click="sendDeleteUser">
-        delete account
+      <button class="dangerous" @click="sendDeleteUser">
+        Delete Account
       </button>
     </div>
     </div>
@@ -98,7 +98,10 @@ export default {
     position: relative;
 
     &-form {
+      border: dotted 1px gray;
+      margin: 10px;
       padding: 10px;
+      border-radius: 5px;
     }
 
     &-span {
@@ -106,7 +109,7 @@ export default {
     }
 
     &-button {
-      padding: 0.5rem;
+      margin: 0.5rem;
     }
   }
 

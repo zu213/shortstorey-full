@@ -3,10 +3,10 @@
       <img alt="Main logo" class="top-bar__logo" src="../assets/logo.png">
       <h1 class="top-bar__heading">Short Storey</h1>
       <nav class="top-bar__nav">
-        <router-link class="top-bar__link" to="/">Home</router-link>
-        <router-link class="top-bar__link" to="/scribe">Create</router-link>
-        <router-link class="top-bar__link" v-if="isAuthenticated" to="/profile">Profile</router-link>
-        <router-link class="top-bar__link" v-if="!isAuthenticated" to="/loginPage">Login</router-link>
+        <router-link :class="['top-bar__link', { 'top-bar__link--selected': isSelected('/') }]" to="/">Home</router-link>
+        <router-link :class="['top-bar__link', { 'top-bar__link--selected': isSelected('/scribe') }]" to="/scribe">Create</router-link>
+        <router-link :class="['top-bar__link', { 'top-bar__link--selected': isSelected('/profile') }]" v-if="isAuthenticated" to="/profile">Profile</router-link>
+        <router-link :class="['top-bar__link', { 'top-bar__link--selected': isSelected('/loginPage') }]" v-if="!isAuthenticated" to="/loginPage">Login</router-link>
         <button v-if="isAuthenticated" @click="logOut">Log out</button>
       </nav>
     </header>
@@ -34,6 +34,9 @@ export default {
     logOut() {
       this.auth.logOut()
       this.$router.push('/')
+    },
+    isSelected(route) {
+      return this.$route?.fullPath == route
     }
   }
 
@@ -52,6 +55,7 @@ export default {
     &__logo {
       max-width: 50px;
       aspect-ratio: 1;
+      border-radius: 3px;
     }
 
     &__heading {
@@ -62,6 +66,14 @@ export default {
 
     &__nav {
       justify-content: end;
+    }
+
+    &__link {
+      text-decoration: none;
+
+      &--selected {
+        color: rgb(180, 180, 180);
+      }
     }
 
   }

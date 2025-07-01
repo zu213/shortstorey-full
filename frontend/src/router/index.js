@@ -9,6 +9,7 @@ import PublicProfilePage from '@/components/PublicProfilePage.vue'
 import CreateStory from '@/components/CreateStory.vue'
 import { useAuthStore } from '@/store/auth'
 import CreateUser from '@/components/CreateUser.vue'
+import PageNotFound from '@/components/PageNotFound.vue'
 
 const routes = [
   { 
@@ -50,6 +51,7 @@ const routes = [
     meta: { requiresAuth: false }
   },
   { path: '/loginPage', name: 'Login', component: LoginPage },
+  { path: '/:pathMatch(.*)*', name: 'PageNotFound', component: PageNotFound },
 ]
 
 const router = createRouter({

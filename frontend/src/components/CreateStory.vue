@@ -13,7 +13,7 @@
         <QuillEditor style="height: 250px" v-model:content="content" contentType="html" :toolbar="toolbarOptions" theme="snow" />
       </div>
       <div>
-        <input class="form__submit" type="submit" value="Post story" />
+        <input class="form__submit" type="submit" value="Post Story" />
       </div>
     </form>
   </div>
@@ -44,7 +44,6 @@ export default {
       toolbarOptions: [
         ['bold', 'italic', 'underline'],
         [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-        ['link', 'image'],
       ]
     }
   },
@@ -127,6 +126,10 @@ export default {
     margin-top: 1em;
     position: relative;
     transform: translate(-50%, 0);
+
+    &:active {
+      transform: scale(0.98) translate(-50%, 0);
+    }
   }
  
 }

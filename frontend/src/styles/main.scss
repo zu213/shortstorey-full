@@ -1,16 +1,50 @@
+/** Base **/
+
 h1, h2, button, label {
   -webkit-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  cursor: default;
 }
 
 body {
   margin: 0;
 }
 
-button, .form__submit {
-  color: red;
+button, [class$="__submit"] {
+  background-color: #FFFFFF;
+  border: 0;
+  border-radius: .5rem;
+  box-sizing: border-box;
+  color: #111827;
+  font-family: "Inter var",ui-sans-serif,system-ui,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+  font-size: .875rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+  padding: .5rem .75rem;
+  text-align: center;
+  text-decoration: none #D1D5DB solid;
+  text-decoration-thickness: auto;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
 }
+
+[class$="__submit"]:hover, button:hover {
+  background-color: rgb(249,250,251);
+}
+
+[class$="__submit"]:active, button:active {
+  transform: scale(0.98);
+}
+
+button:focus-visible {
+  box-shadow: none;
+}
+
+/** Repeating **/
 
 .story-display {
   width: 80%;
@@ -23,4 +57,8 @@ button, .form__submit {
     grid-template-columns: 1fr 1fr;
     gap: 20px;
   }
+}
+
+.dangerous {
+  color: red;
 }

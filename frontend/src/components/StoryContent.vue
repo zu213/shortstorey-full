@@ -1,30 +1,37 @@
 <template>
   <div class="story-content" v-if="story">
 
-    <div class="story-content__rating">
-      <router-link class="story-content__rating-link" v-if="story.rating" :to="`/ratingstory/${story.id}`">
-        {{story.rating * 5}}/5
-      </router-link>
-      <span v-else>
-        No ratings yet
-      </span>
-      <span class="story-content__rating-buttons">
-        <button @click="submitRating(1)">
-          1
+    <div class="story-content__controls">
+      <div v-if="!storyOwner" class="story-content__rating">
+        <router-link class="story-content__rating-link" v-if="story.rating" :to="`/ratingstory/${story.id}`">
+          {{story.rating * 5}}/5
+        </router-link>
+        <span v-else>
+          No ratings yet
+        </span>
+        <span class="story-content__rating-buttons">
+          <button @click="submitRating(1)">
+            1
+          </button>
+          <button @click="submitRating(2)">
+            2
+          </button>
+          <button @click="submitRating(3)">
+            3
+          </button>
+          <button @click="submitRating(4)">
+            4
+          </button>
+          <button @click="submitRating(5)">
+            5
+          </button>
+        </span>
+      </div>
+      <div v-else>
+        <button class="dangerous story-content__delete" @click="deleteStory">
+          Delete Story
         </button>
-        <button @click="submitRating(2)">
-          2
-        </button>
-        <button @click="submitRating(3)">
-          3
-        </button>
-        <button @click="submitRating(4)">
-          4
-        </button>
-        <button @click="submitRating(5)">
-          5
-        </button>
-      </span>
+      </div>
     </div>
 
     <div class="story-content-container">
@@ -34,14 +41,8 @@
         <router-link :to="`/profile/${story.user_id}`">{{ story.user.name }}</router-link>
       </div>
 
-      <div v-if="true">
-        <button @click="deleteStory">
-          delete story
-        </button>
-      </div>
-
       <div>
-        Content: <span v-html="story.content" />
+        <span v-html="story.content" />
       </div>
     </div>
   </div>
@@ -57,13 +58,15 @@ export default {
   data() {
     return {
       story: null,
-      auth: null
+      auth: null,
+      storyOwner: false
     }
   },
   async created() {
     const id = this.$route.params.id
     this.story = await getStory(id)
     this.auth = useAuthStore()
+    this.storyOwner = this.story.user_id == this.auth.getUserId
   },
   computed: {
     currentUser() {
@@ -111,12 +114,14 @@ export default {
     left: 20%;
   }
 
-  &__rating {
+  &__controls {
     position: absolute;
     top: 0;
     right: 0;
     padding: 1rem;
+  }
 
+  &__rating {
     &-link {
       padding: 1rem;
     }
@@ -124,6 +129,10 @@ export default {
     &-buttons {
       padding: 1rem;
     }
+  }
+
+  &__delete {
+    margin: 10px;
   }
 }
 </style>

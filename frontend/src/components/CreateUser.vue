@@ -1,5 +1,5 @@
 <template>
-  <div class="createUser">
+  <div class="create-user">
     <div v-if="!isAuthenticated">
      <form @submit.prevent="submitNewUserForm">
         <label for="fname">Name:</label><br>
