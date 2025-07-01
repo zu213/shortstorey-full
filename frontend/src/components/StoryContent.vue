@@ -41,7 +41,7 @@
       </div>
 
       <div>
-        Content: {{ story.content }}
+        Content: <span v-html="story.content" />
       </div>
     </div>
   </div>

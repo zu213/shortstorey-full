@@ -3,7 +3,7 @@
     <router-link :to="`/readstory/${story.id}`">
       <h2 class="story-card__heading">{{ story.title }}</h2>
       <div class="story-card__content">
-        {{ story.content }}
+        <div v-html="story.content" />
       </div>
       <div class="story-card__footer">
         <router-link :to="`/profile/${story.user_id}`">
@@ -35,7 +35,6 @@ export default {
     friendlyTime() {
       if(!this.story?.created_at) return ''
       const date = new Date(this.story.created_at);
-      console.log(typeof this.story.created_at)
       const day = date.getUTCDate();
       const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];

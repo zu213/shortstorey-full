@@ -10,12 +10,12 @@
       </div>
       <div class="form__content">
         <label for="fcontent">Content:</label>
-        <QuillEditor style="height: 250px" v-model="content" :toolbar="toolbarOptions" theme="snow" />
+        <QuillEditor style="height: 250px" v-model:content="content" contentType="html" :toolbar="toolbarOptions" theme="snow" />
       </div>
       <div>
         <input class="form__submit" type="submit" value="Post story" />
       </div>
-    </form> 
+    </form>
   </div>
   <div v-else>
     you need to log in
