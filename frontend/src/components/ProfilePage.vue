@@ -21,7 +21,7 @@
       </button>
     </div>
     </div>
-    <div class="story-display">
+    <div class="story-display" v-if="stories.length > 0">
       <h2 class="profile-page__story-title">Your stories</h2>
       <div>
         <div v-for="(story, i) in stories" :key="i">
@@ -106,6 +106,10 @@ export default {
 
     &-span {
       padding: 1rem;
+
+      @media screen and (max-width: 900px)  {
+        padding: 0.25rem;
+      }
     }
 
     &-button {
@@ -122,5 +126,10 @@ export default {
 .story-display {
   width: 60%;
   left: 20%;
+
+  @media screen and (max-width: 600px)  {
+    width: 80%;
+    left: 10%;
+  }
 }
 </style>

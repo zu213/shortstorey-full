@@ -40,10 +40,9 @@
         Author: 
         <router-link :to="`/profile/${story.user_id}`">{{ story.user.name }}</router-link>
       </div>
-
-      <div>
-        <span v-html="story.content" />
-      </div>
+    </div>
+    <div class="story-content__content">
+      <span v-html="story.content" />
     </div>
   </div>
 </template>
@@ -114,11 +113,28 @@ export default {
     left: 20%;
   }
 
+  &__title, &__author {
+    margin: 5px;
+  }
+
+  &__content {
+    margin: 15px 5px;
+    text-align: left;
+    position: relative;
+    left: 10%;
+    width: 80%;
+  }
+
   &__controls {
     position: absolute;
     top: 0;
     right: 0;
-    padding: 1rem;
+    padding: 0.25rem;
+
+    
+    @media screen and (max-width: 800px)  {
+      position: relative;
+    }
   }
 
   &__rating {
@@ -128,6 +144,10 @@ export default {
 
     &-buttons {
       padding: 1rem;
+      
+      button {
+        margin: 3px;
+      }
     }
   }
 

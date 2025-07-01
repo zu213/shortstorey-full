@@ -56,6 +56,16 @@ button:focus-visible {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
+
+    @media screen and (max-width: 600px)  {
+      display: block;
+    }
+  }
+
+  &__none {
+    position: relative;
+    font-size: x-large;
+    top: 30vh;
   }
 }
 

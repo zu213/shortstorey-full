@@ -1,7 +1,10 @@
 <template>
     <header class="top-bar">
       <img alt="Main logo" class="top-bar__logo" src="../assets/logo.png">
-      <h1 class="top-bar__heading">Short Storey</h1>
+      
+      <h1 class="top-bar__heading">
+        <router-link to="/">Short Storey</router-link>
+      </h1>
       <nav class="top-bar__nav">
         <router-link :class="['top-bar__link', { 'top-bar__link--selected': isSelected('/') }]" to="/">Home</router-link>
         <router-link :class="['top-bar__link', { 'top-bar__link--selected': isSelected('/scribe') }]" to="/scribe">Create</router-link>
@@ -56,12 +59,25 @@ export default {
       max-width: 50px;
       aspect-ratio: 1;
       border-radius: 3px;
+
+      @media screen and (max-width: 350px)  {
+        display: none;
+      }
     }
 
     &__heading {
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
+      
+      a {
+        color: white;
+        text-decoration: none;
+      }
+
+      @media screen and (max-width: 900px)  {
+        display: none;
+      }
     }
 
     &__nav {

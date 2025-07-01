@@ -90,11 +90,9 @@ export default {
       }
       const alreadyExists  = await checkRating(this.auth.getUserId, this.story.id)
       try {
-        const result = alreadyExists.exists ? await putRating(ratingDetails, this.auth.token, alreadyExists.exists?.id) : await postRating(ratingDetails, this.auth.token)
-        console.log('Update successful:', result)
+        alreadyExists.exists ? await putRating(ratingDetails, this.auth.token, alreadyExists.exists?.id) : await postRating(ratingDetails, this.auth.token)
       } catch (err) {
         alert(err)
-        console.error('Update failed:', err)
       }
     },
     async deleteRating(){
@@ -102,7 +100,6 @@ export default {
         await deleteRating(this.auth.token, this.userRating.id)
       } catch (err) {
         alert(err)
-        console.error('Update failed:', err)
       }
     }
   }

@@ -1,8 +1,11 @@
 <template>
   <div class="story-display">
     <h2>Stories</h2>
-    <div class="story-display--grid">
+    <div v-if="stories.length > 0" class="story-display--grid">
       <StoryCard v-for="(story, i) in stories" :key="i" :story="story" />
+    </div>
+    <div class="story-display__none" v-else>
+      No stories yet
     </div>
   </div>
 </template>
