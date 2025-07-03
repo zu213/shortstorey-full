@@ -31,8 +31,12 @@ export default {
   },
   async created() {
     const id = this.$route.params.id
-    this.user = await getUser(id)
-    this.stories = await getStories(`user_id=${this.user?.id}`)
+    try{
+      this.user = await getUser(id)
+      this.stories = await getStories(`user_id=${this.user?.id}`)
+    } catch(err) {
+      alert(err)
+    }
   }
 }
 </script>

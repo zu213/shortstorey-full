@@ -63,17 +63,17 @@ export default {
         user_id: this.auth.getUserId
       }
       try {
-        const result = await addStory(storyDetails, this.auth.token)
-        console.log('Update successful:', result)
+        await addStory(storyDetails, this.auth.token)
+        alert('Story successfully posted')
+        this.$router.push('/')
       } catch (err) {
-        console.error('Update failed:', err)
+        alert(err)
       }
     }
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 
 .create-story {
@@ -131,7 +131,6 @@ export default {
       transform: scale(0.98) translate(-50%, 0);
     }
   }
- 
 }
 
 </style>

@@ -57,6 +57,10 @@ button:focus-visible {
     grid-template-columns: 1fr 1fr;
     gap: 20px;
 
+    .story-card {
+        max-width: 30vw;
+    }
+
     @media screen and (max-width: 600px)  {
       display: block;
     }

@@ -3,14 +3,14 @@
 
 export async function getStories(params){
   const response = await fetch(`/stories${`?${params}` ?? ''}`)
-  if(!response.ok) throw new Error('nope nope')
+  if(!response.ok) throw new Error('No Stories found')
   const json = await response.json()
   return json
 }
 
 export async function getStory(id){
   const response = await fetch(`/stories/${id}`)
-  if(!response.ok) throw new Error('nope nope')
+  if(!response.ok) throw new Error(`No story with id: ${id} found`)
   const json = await response.json()
   return json
 }
@@ -26,7 +26,7 @@ export async function addStory(newStory, token){
     body: JSON.stringify(newStory)
   })
 
-  if(!response.ok) throw new Error('nope nope')
+  if(!response.ok) throw new Error('Failed to create story')
   const json = await response.json()
   return json
 }
@@ -40,7 +40,7 @@ export async function deleteStory(token, id){
   })
 
   const json = await response.json()
-  if(!response.ok) throw new Error(`nope ${json.message}`)
+  if(!response.ok) throw new Error(`Failed to delete story`)
   return json
 }
 
@@ -48,7 +48,7 @@ export async function deleteStory(token, id){
 
 export async function getUser(id){
   const response = await fetch(`/user/${id}`)
-  if(!response.ok) throw new Error('nope nope')
+  if(!response.ok) throw new Error(`No user with id: ${id} found`)
   const json = await response.json()
   return json
 }
@@ -64,7 +64,7 @@ export async function updateUser(newUser, token){
     body: JSON.stringify(newUser)
   })
 
-  if(!response.ok) throw new Error('nope nope')
+  if(!response.ok) throw new Error('Failed to update user')
   const json = await response.json()
   return json
 }
@@ -79,7 +79,7 @@ export async function createUser(newUser){
     body: JSON.stringify(newUser)
   })
 
-  if(!response.ok) throw new Error('nope nope')
+  if(!response.ok) throw new Error('Failed to create user')
   const json = await response.json()
   return json
 }
@@ -93,7 +93,7 @@ export async function deleteUser(token, id){
   })
 
   const json = await response.json()
-  if(!response.ok) throw new Error(`nope ${json.message}`)
+  if(!response.ok) throw new Error(`Failed to delete user`)
   return json
 }
 
@@ -110,7 +110,7 @@ export async function attemptLogin(username, password){
     body: JSON.stringify({ "name": username, "passGuess": password })
   })
 
-  if(!response.ok) throw new Error('nope nope')
+  if(!response.ok) throw new Error('Failed to send login request')
   const json = await response.json()
   return json
 }
@@ -119,14 +119,14 @@ export async function attemptLogin(username, password){
 
 export async function getRatings(params){
   const response = await fetch(`/rating${`?${params}` ?? ''}`)
-  if(!response.ok) throw new Error('nope nope')
+  if(!response.ok) throw new Error('Failed to get ratings')
   const json = await response.json()
   return json
 }
 
 export async function checkRating(userId, storyId){
   const response = await fetch(`/rating/${storyId}/${userId}`)
-  if(!response.ok) throw new Error('nope nope')
+  if(!response.ok) throw new Error(`Failed to get rating`)
   const json = await response.json()
   return json
 }
@@ -143,7 +143,7 @@ export async function postRating(rating, token){
   })
 
   const json = await response.json()
-  if(!response.ok) throw new Error(`nope ${json.message}`)
+  if(!response.ok) throw new Error(`Failed to create rating`)
   return json
 }
 
@@ -159,7 +159,7 @@ export async function putRating(rating, token, id){
   })
 
   const json = await response.json()
-  if(!response.ok) throw new Error(`nope ${json.message}`)
+  if(!response.ok) throw new Error(`Failed to update rating`)
   return json
 }
 
@@ -172,6 +172,6 @@ export async function deleteRating(token, id){
   })
 
   const json = await response.json()
-  if(!response.ok) throw new Error(`nope ${json.message}`)
+  if(!response.ok) throw new Error(`Failed to delete rating`)
   return json
 }

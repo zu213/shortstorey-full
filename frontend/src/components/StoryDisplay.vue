@@ -4,6 +4,9 @@
     <div v-if="stories.length > 0" class="story-display--grid">
       <StoryCard v-for="(story, i) in stories" :key="i" :story="story" />
     </div>
+    <div class="story-display__none" v-else-if="loading">
+      Loading...
+    </div>
     <div class="story-display__none" v-else>
       No stories yet
     </div>
@@ -21,17 +24,17 @@ export default {
   name: 'StoryDisplay',
   data() {
     return {
-      stories: []
-    }
-  },
-  computed: {
-    currentUser() {
-      // MAYBE MAKE ID ?
-      return localStorage.getItem('username')
+      stories: [],
+      loading: true,
     }
   },
   async created() {
-    this.stories = await getStories('')
+    try {
+      this.stories = await getStories('')
+    } catch(err) {
+      alert(err)
+    }
+    this.loading = false
   },
   props: {
     params: String
@@ -39,6 +42,5 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 </style>

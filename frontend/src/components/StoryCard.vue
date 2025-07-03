@@ -3,7 +3,7 @@
     <router-link :to="`/readstory/${story.id}`">
       <h2 class="story-card__heading">{{ story.title }}</h2>
       <div class="story-card__content">
-        <div v-html="story.content" />
+        <span v-html="story.content" />
       </div>
       <div class="story-card__footer" @click.prevent="">
         <router-link :to="`/profile/${story.user_id}`">
@@ -28,10 +28,6 @@ export default {
     }
   },
   computed: {
-    currentUser() {
-      // MAYBE MAKE ID ?
-      return localStorage.getItem('username')
-    },
     friendlyTime() {
       if(!this.story?.created_at) return ''
       const date = new Date(this.story.created_at);
@@ -58,7 +54,7 @@ export default {
 }
 </script>
 
-<style scoped  lang="scss">
+<style scoped lang="scss">
 .story-card {
   min-height: 50px;
   padding: 1.5em 3rem;
@@ -82,13 +78,12 @@ export default {
 
   &__content {
     max-height: 100px;
+    overflow: hidden;
   }
 
   &__heading {
     padding: 3px 0px;
     margin: 4px 0px;
-
-
   }
 
   &__footer {
@@ -109,3 +104,12 @@ export default {
 }
 
 </style>
+
+<style lang="scss">
+.story-card__content {
+  span, p, ul {
+    margin-top: 0;
+  }
+}
+</style>
+

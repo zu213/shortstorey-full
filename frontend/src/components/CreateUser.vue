@@ -47,16 +47,16 @@ export default {
         passwordHash: this.password
       }
       try {
-        const result = await createUser(userToCreate)
-        console.log('Update successful:', result)
+        await createUser(userToCreate)
+        alert('User created')
+        this.$router.push('/loginPage')
       } catch (err) {
-        console.error('Update failed:', err)
+        alert(err)
       }
     }
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 </style>

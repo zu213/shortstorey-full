@@ -14,10 +14,10 @@
 
       <div v-if="auth">
         <div v-if="userRating">
-          your score {{story.rating * 5}}/5
+          Your score {{userRating.actual_score}}/5
         </div>
         <div v-else>
-          you havent rated this yet
+          You havent rated this yet
         </div>
       </div>
 
@@ -68,44 +68,50 @@ export default {
     }
   },
   async created() {
-    const id = this.$route.params.id
-    this.story = await getStory(id)
-    this.totalRating = this.story.rating
     this.auth = useAuthStore()
-    this.userRating = (await getRatings(`to_story_id=${id}&user_id=${this.auth.getUserId}`))[0]
-    this.ratings = await getRatings(`to_story_id=${id}`)
-  },
-  computed: {
-    currentUser() {
-      // MAYBE MAKE ID ?
-      return localStorage.getItem('username')
-    }
+    await this.loadData()
   },
   methods: {
+    async loadData() {
+      try {
+        const id = this.$route.params.id
+        this.story = await getStory(id)
+        this.totalRating = this.story.rating
+        this.userRating = (await getRatings(`to_story_id=${id}&user_id=${this.auth.getUserId}`))[0]
+        this.ratings = await getRatings(`to_story_id=${id}`)
+      } catch(err) {
+        alert(err)
+      }
+    },
     async submitRating(rating){
       const ratingDetails = {
         actual_score: rating,
         to_story_id: this.story.id,
         user_id: this.auth.getUserId
       }
-      const alreadyExists  = await checkRating(this.auth.getUserId, this.story.id)
       try {
+        const alreadyExists  = await checkRating(this.auth.getUserId, this.story.id)
         alreadyExists.exists ? await putRating(ratingDetails, this.auth.token, alreadyExists.exists?.id) : await postRating(ratingDetails, this.auth.token)
       } catch (err) {
         alert(err)
+      } finally {
+        this.loadData()
       }
     },
-    async deleteRating(){
-      try {
-        await deleteRating(this.auth.token, this.userRating.id)
-      } catch (err) {
+    deleteRating(){
+      deleteRating(this.auth.token, this.userRating.id).then(() => {
+        if(this.ratings.length < 2) {
+          this.$router.go(-1);
+        } else {
+          this.loadData()
+        }
+      }).catch((err) => {
         alert(err)
-      }
+      })
     }
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 </style>

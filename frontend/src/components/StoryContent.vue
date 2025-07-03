@@ -1,6 +1,5 @@
 <template>
   <div class="story-content" v-if="story">
-
     <div class="story-content__controls">
       <div v-if="!storyOwner" class="story-content__rating">
         <router-link class="story-content__rating-link" v-if="story.rating" :to="`/ratingstory/${story.id}`">
@@ -45,8 +44,13 @@
       <span v-html="story.content" />
     </div>
   </div>
+  <div class="story-display__none" v-else-if="failedToLoad">
+    Failed to load :(
+  </div>
+  <div class="story-display__none" v-else>
+    Loading...
+  </div>
 </template>
-
 <script>
 
 import { getStory, deleteStory, postRating, putRating, checkRating } from '../bridge/bridge.js'
@@ -58,50 +62,51 @@ export default {
     return {
       story: null,
       auth: null,
-      storyOwner: false
+      storyOwner: false,
+      failedToLoad: false
     }
   },
   async created() {
-    const id = this.$route.params.id
-    this.story = await getStory(id)
-    this.auth = useAuthStore()
-    this.storyOwner = this.story.user_id == this.auth.getUserId
-  },
-  computed: {
-    currentUser() {
-      // MAYBE MAKE ID ?
-      return localStorage.getItem('username')
-    }
+    this.loadData()
   },
   methods: {
+    async loadData(){
+      const id = this.$route.params.id
+      try {
+        this.story = await getStory(id)
+        this.auth = useAuthStore()
+      } catch(err){
+        this.failedToLoad = true
+        alert(err)
+      }
+      this.storyOwner = this.story.user_id == this.auth.getUserId
+    },
     async submitRating(rating){
       const ratingDetails = {
         actual_score: rating,
         to_story_id: this.story.id,
         user_id: this.auth.getUserId
       }
-      const alreadyExists  = await checkRating(this.auth.getUserId, this.story.id)
       try {
-        const result = alreadyExists.exists ? await putRating(ratingDetails, this.auth.token, alreadyExists.exists?.id) : await postRating(ratingDetails, this.auth.token)
-        console.log('Update successful:', result)
+        const alreadyExists  = await checkRating(this.auth.getUserId, this.story.id)
+        alreadyExists.exists ? await putRating(ratingDetails, this.auth.token, alreadyExists.exists?.id) : await postRating(ratingDetails, this.auth.token)
       } catch (err) {
         alert(err)
-        console.error('Update failed:', err)
+      } finally {
+        this.loadData()
       }
     },
-    async deleteStory(){
-      try {
-        await deleteStory(this.auth.token, this.story.id)
-      } catch (err) {
+    deleteStory(){
+      deleteStory(this.auth.token, this.story.id).then(() => {
+        this.$router.go(-1)
+      }).catch((err) => {
         alert(err)
-        console.error('Update failed:', err)
-      }
+      })
     }
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .story-content {
   padding-top: 5vh;

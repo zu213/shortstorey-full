@@ -62,10 +62,17 @@ export default {
   },
   async created() {
     this.auth = useAuthStore()
-    this.user = await getUser(this.currentUserId)
-    this.stories = await getStories(`user_id=${this.user?.id}`)
+    this.loadData()
   },
   methods: {
+    async loadData() {
+      try {
+        this.user = await getUser(this.currentUserId)
+        this.stories = await getStories(`user_id=${this.user?.id}`)
+      } catch(err) {
+        alert(err)
+      }
+    },
     async submitUserForm() {
       const userToUpdate = {
         id: this.user.id,
@@ -73,14 +80,15 @@ export default {
         ...(this.password && { password: this.password }),
       }
       try {
-        const result = await updateUser(userToUpdate, this.auth.token)
-        console.log('Update successful:', result)
+        await updateUser(userToUpdate, this.auth.token)
       } catch (err) {
-        console.error('Update failed:', err)
+        alert(err)
+      } finally {
+        this.loadData()
       }
     },
     sendDeleteUser(){
-      deleteUser(this.auth.token, this.user.id)
+      deleteUser(this.auth.token, this.user.id).catch(err => alert(err))
       this.auth.logOut()
       this.$router.push('/')
     }
@@ -88,7 +96,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .profile-page {
 

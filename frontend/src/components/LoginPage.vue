@@ -7,7 +7,7 @@
         <button type="submit">Login</button>
         </form>
         <div>
-          New here ? <router-link to="/createAccount">create ana ccount</router-link>
+          New here ? <router-link to="/createAccount">create an account</router-link>
         </div>
     </div>
 </template>
@@ -30,17 +30,20 @@ export default {
   },
   methods: {
     async login() {
-
       const userSideCheck = 1
       if (1 === userSideCheck) {
-        const loginResponse = await attemptLogin(this.username, this.password)
-        if(loginResponse.token){
-          this.auth.logIn(loginResponse)
-          this.$router.push({ name: 'Stories' })
-        }else if(loginResponse.validUser == true){
-          alert('Invalid credentials')
-        }else{
-          alert('Invalid credentials')
+        try {
+          const loginResponse = await attemptLogin(this.username, this.password)
+          if(loginResponse.token){
+            this.auth.logIn(loginResponse)
+            this.$router.push({ name: 'Stories' })
+          }else if(loginResponse.validUser == true){
+            alert('Invalid username')
+          }else{
+            alert('Invalid password')
+          }
+        } catch(err){
+          alert(err)
         }
       } else {
         alert('Invalid credentials')
