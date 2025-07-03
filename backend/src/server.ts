@@ -179,6 +179,9 @@ server.get<{ Reply: Rating[] }>("/rating", { schema: ratingsQuerySchema }, async
   if(req.query && Object.entries(req.query).length > 0){
     dbAllEntries = await Prisma.rating.findMany({
       where: req.query,
+      include: {
+        user: { select: { name: true } }
+      }
     });
   } else {
     dbAllEntries = await Prisma.rating.findMany({});
@@ -189,6 +192,9 @@ server.get<{ Reply: Rating[] }>("/rating", { schema: ratingsQuerySchema }, async
 server.get<{ Body: Rating, Params: { id: string } }>("/rating/:id", async (req, reply) => {
   const dbEntry = await Prisma.rating.findUnique({
     where: { id: req.params.id },
+    include: {
+      user: { select: { name: true } }
+    }
   });
   if (!dbEntry) {
     reply.status(500).send({ msg: `Error finding rating with id ${req.params.id}` });

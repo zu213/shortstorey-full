@@ -1,48 +1,56 @@
 <template>
-  <div class="storyRating" v-if="story">
-    <div>title {{ story.title }}</div>
-    <div>user: 
+  <div class="story-rating" v-if="story">
+    <h3>Story Title: {{ story.title }}</h3>
+    <div class="story-rating__author">Author: 
       <router-link :to="`/profile/${story.user_id}`">{{ story.user.name }}</router-link>
     </div>
 
-      <div v-if="totalRating">
-        total score {{story.rating * 5}}/5
+    <div class="story-rating__info" v-if="totalRating">
+      Total score: {{story.rating * 5}}/5
+    </div>
+    <div class="story-rating__info" v-else>
+      No ratings yet
+    </div>
+
+    <div class="story-rating__info" v-if="auth">
+      <div v-if="userRating">
+        Your score: {{userRating.actual_score}}/5
       </div>
       <div v-else>
-        No ratings yet
+        You havent rated this yet
       </div>
+    </div>
 
-      <div v-if="auth">
-        <div v-if="userRating">
-          Your score {{userRating.actual_score}}/5
-        </div>
-        <div v-else>
-          You havent rated this yet
-        </div>
+    <div class="story-rating__container">
+      <h3>All ratings</h3>
+      <div class="story-rating__rating" v-for="(rating, i) in ratings" :key="i">
+        <span>
+          User: {{ rating.user?.name ?? 'No name' }}
+        </span>
+        <span>
+          Given rating: {{ rating.actual_score }}
+        </span>
       </div>
+    </div>
 
-      <div v-for="(rating, i) in ratings" :key="i">
-        {{ rating }}
-      </div>
-
-    <div>
-      <button @click="submitRating(1)">
+    <div  class="story-rating__buttons">
+      <button :class="{'selected' : userRating?.actual_score == 1}" @click="submitRating(1)">
         1
       </button>
-      <button @click="submitRating(2)">
+      <button :class="{'selected' : userRating?.actual_score == 2}" @click="submitRating(2)">
         2
       </button>
-      <button @click="submitRating(3)">
+      <button :class="{'selected' : userRating?.actual_score == 3}" @click="submitRating(3)">
         3
       </button>
-      <button @click="submitRating(4)">
+      <button :class="{'selected' : userRating?.actual_score == 4}" @click="submitRating(4)">
         4
       </button>
-      <button @click="submitRating(5)">
+      <button :class="{'selected' : userRating?.actual_score == 5}" @click="submitRating(5)">
         5
       </button>
-      <button @click="deleteRating">
-        delete
+      <button class="dangerous" @click="deleteRating">
+        Delete Rating
       </button>
     </div>
   </div>
@@ -79,6 +87,7 @@ export default {
         this.totalRating = this.story.rating
         this.userRating = (await getRatings(`to_story_id=${id}&user_id=${this.auth.getUserId}`))[0]
         this.ratings = await getRatings(`to_story_id=${id}`)
+      
       } catch(err) {
         alert(err)
       }
@@ -113,5 +122,36 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.selected {
+  color: green
+}
+
+.story-rating {
+
+  &__info, &__author {
+    padding: 5px;
+    font-size: large;
+  }
+
+  &__container {
+    margin: 5px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: gray;
+    border-radius: 5px;
+    width: fit-content;
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0);
+  }
+
+  &__rating {
+    padding: 10px 20px;
+  }
+
+  &__buttons {
+    margin: 10px;
+  }
+}
 </style>

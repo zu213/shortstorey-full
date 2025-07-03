@@ -8,11 +8,12 @@ datasource db {
 }
 
 model User {
-  id           String  @id @default(uuid())
-  name         String  @unique
+  id           String   @id @default(uuid())
+  name         String   @unique
   passwordHash String
   rating       Float?
   stories      Story[]
+  ratings      Rating[]
 }
 
 model Story {
@@ -31,6 +32,7 @@ model Rating {
   id           String   @id @default(uuid())
   created_at   DateTime
   actual_score Float
+  user         User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id      String
   rating_power Float
   to_story     Story    @relation(fields: [to_story_id], references: [id], onDelete: Cascade)
