@@ -10,7 +10,7 @@
           {{ story.user?.name ?? 'No author found' }}
         </router-link>
         -- 
-        <router-link :to="`/ratingstory/${story.id}`">
+        <router-link :to="`/readrating/${story.id}`">
           {{ story.rating ? `${story.rating * 5}/5` : 'No ratings yet'}}
         </router-link>
         {{ friendlyTime  }}

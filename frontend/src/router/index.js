@@ -23,7 +23,7 @@ const routes = [
     component: StoryContent,
   },
   {
-    path: '/ratingstory/:id',
+    path: '/readrating/:id',
     name: 'StoryRating',
     component: StoryRating,
   },

@@ -21,18 +21,6 @@
       </div>
     </div>
 
-    <div class="story-rating__container">
-      <h3>All ratings</h3>
-      <div class="story-rating__rating" v-for="(rating, i) in ratings" :key="i">
-        <span>
-          User: {{ rating.user?.name ?? 'No name' }}
-        </span>
-        <span>
-          Given rating: {{ rating.actual_score }}
-        </span>
-      </div>
-    </div>
-
     <div  class="story-rating__buttons">
       <button :class="{'selected' : userRating?.actual_score == 1}" @click="submitRating(1)">
         1
@@ -52,6 +40,18 @@
       <button class="dangerous" @click="deleteRating">
         Delete Rating
       </button>
+    </div>
+
+     <div class="story-rating__container">
+      <h3>All ratings</h3>
+      <div class="story-rating__rating" v-for="(rating, i) in ratings" :key="i">
+        <span class="story-rating__rating-name">
+          User: {{ rating.user?.name ?? 'No name' }}
+        </span>
+        <span>
+          Given rating: {{ rating.actual_score }}
+        </span>
+      </div>
     </div>
   </div>
   <div v-else>
@@ -124,7 +124,9 @@ export default {
 
 <style lang="scss" scoped>
 .selected {
-  color: green
+  color: green;
+  background-color: rgb(236, 236, 236);
+  transform: scale(0.99);
 }
 
 .story-rating {
@@ -148,10 +150,17 @@ export default {
 
   &__rating {
     padding: 10px 20px;
+
+    &-name {
+      max-width: 50vw;
+    }
   }
 
   &__buttons {
     margin: 10px;
+    button {
+      margin: 4px;
+    }
   }
 }
 </style>
