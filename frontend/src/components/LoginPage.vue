@@ -1,13 +1,21 @@
 <template>
-    <div class="loginPage">
+    <div class="login-page">
         <h2>Login</h2>
-        <form @submit.prevent="login">
-        <input v-model="username" placeholder="Username" required />
-        <input v-model="password" type="password" placeholder="Password" required />
+        <form class="login-page__form" @submit.prevent="login">
+        <div>
+          <div class="login-page__form-username">
+            <label>Username: </label>
+            <input v-model="username" placeholder="Username" required />
+          </div>
+          <div class="login-page__form-password">
+            <label>Password: </label>
+            <input v-model="password" type="password" placeholder="Password" required />
+          </div>
+        </div>
         <button type="submit">Login</button>
         </form>
-        <div>
-          New here ? <router-link to="/createAccount">create an account</router-link>
+        <div class="login-page__footnote">
+          New here ? <router-link to="/createAccount">Create an Account</router-link>
         </div>
     </div>
 </template>
@@ -52,3 +60,28 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.login-page {
+  &__form {
+
+    &-username, &-password {
+      margin: 5px;
+      display: inline-block;
+    }
+
+    input {
+      margin: 5px;
+    }
+
+    button {
+      margin: 10px;
+    }
+  }
+
+  &__footnote {
+    margin: 10px;
+    font-size: large;
+  }
+}
+</style>

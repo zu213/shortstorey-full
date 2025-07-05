@@ -12,7 +12,7 @@
           <input type="text" v-model="password" name="fpassword" />
         </span>
         <div class="profile-page__form-button">
-          <input class="form__submit" type="submit" value="Submit" />
+          <button class="form__submit" type="submit">Update Account</button>
         </div>
       </form>
       <div>
@@ -93,6 +93,7 @@ export default {
         alert(err)
       } finally {
         this.loadData()
+        alert("Successfully updated your account")
       }
     },
     sendDeleteUser(){

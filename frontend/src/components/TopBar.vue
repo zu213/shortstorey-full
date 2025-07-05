@@ -10,7 +10,7 @@
         <router-link :class="['top-bar__link', { 'top-bar__link--selected': isSelected('/') }]" to="/">Home</router-link>
         <router-link :class="['top-bar__link', { 'top-bar__link--selected': isSelected('/scribe') }]" to="/scribe">Create</router-link>
         <router-link :class="['top-bar__link', { 'top-bar__link--selected': isSelected('/profile') }]" v-if="isAuthenticated" to="/profile">Profile</router-link>
-        <router-link :class="['top-bar__link', { 'top-bar__link--selected': isSelected('/loginPage') }]" v-if="!isAuthenticated" to="/loginPage">Login</router-link>
+        <router-link :class="['top-bar__link', { 'top-bar__link--selected': isSelected('/signinPage') }]" v-if="!isAuthenticated" to="/signinPage">Login</router-link>
         <button v-if="isAuthenticated" @click="logOut">Log out</button>
       </nav>
     </header>

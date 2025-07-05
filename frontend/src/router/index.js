@@ -50,7 +50,7 @@ const routes = [
     component: CreateUser,
     meta: { requiresAuth: false }
   },
-  { path: '/loginPage', name: 'Login', component: LoginPage },
+  { path: '/signinPage', name: 'Login', component: LoginPage },
   { path: '/:pathMatch(.*)*', name: 'PageNotFound', component: PageNotFound },
 ]
 

@@ -1,17 +1,23 @@
 <template>
   <div class="create-user">
     <div v-if="!isAuthenticated">
-     <form @submit.prevent="submitNewUserForm">
-        <label for="fname">Name:</label><br>
-        <input type="text" v-model="name" name="fname" />
-        <label for="fname">Password:</label><br>
-        <input type="text" v-model="password" name="fpassword" />
-        <input type="submit" value="Update" />
+     <form class="create-user__form" @submit.prevent="submitNewUserForm">
+      <div>
+        <div class="create-user__form-username">
+          <label for="fname">Username: </label>
+          <input type="text" v-model="name" name="fname" />
+        </div>
+        <div class="create-user__form-password">
+          <label for="fname">Password: </label>
+          <input type="text" v-model="password" name="fpassword" />
+        </div>
+      </div>
+      <button type="submit">Create</button>
       </form> 
     </div>
-    <div v-else>
-    how did you get here friend ?
-  </div>
+    <div class="story-display__none" v-else>
+      how did you get here friend ?
+    </div>
   </div>
  
   </template>
@@ -49,7 +55,7 @@ export default {
       try {
         await createUser(userToCreate)
         alert('User created')
-        this.$router.push('/loginPage')
+        this.$router.push('/signinPage')
       } catch (err) {
         alert(err)
       }
@@ -58,5 +64,22 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.create-user {
+  &__form {
+    margin: 5px;
+    &-username, &-password {
+      margin: 10px;
+      display: inline-block;
+    }
+
+    input {
+      margin: 5px;
+    }
+
+    button {
+      margin: 10px;
+    }
+  }
+}
 </style>
