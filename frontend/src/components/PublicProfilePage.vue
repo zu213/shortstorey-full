@@ -6,8 +6,11 @@
         <StoryCard :story="story" />
       </div>
     </div>
-    <div v-else class="story-display__none">
+    <div v-else-if="loading" class="story-display__none">
       No stories posted yet
+    </div>
+    <div v-else class="story-display__none">
+      Failed to load profile
     </div>
   </div>
 </template>
@@ -26,7 +29,8 @@ export default {
     return {
       name: '',
       user: null,
-      stories: []
+      stories: [],
+      loading: true
     }
   },
   async created() {
@@ -37,6 +41,7 @@ export default {
     } catch(err) {
       alert(err)
     }
+    this.llading = false
   }
 }
 </script>

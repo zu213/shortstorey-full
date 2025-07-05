@@ -15,11 +15,11 @@
           <input class="form__submit" type="submit" value="Submit" />
         </div>
       </form>
-    <div>
-      <button class="dangerous" @click="sendDeleteUser">
-        Delete Account
-      </button>
-    </div>
+      <div>
+        <button class="dangerous" @click="sendDeleteUser">
+          Delete Account
+        </button>
+      </div>
     </div>
     <div class="story-display" v-if="stories.length > 0">
       <h2 class="profile-page__story-title">Your stories</h2>
@@ -28,6 +28,12 @@
           <StoryCard :story="story" />
         </div>
       </div>
+    </div>
+    <div class="story-display__none" v-if="!stories && !user && loading">
+      Loading...
+    </div>
+    <div class="story-display__none" v-else-if="!stories && !user && !loading">
+      Failed to load.
     </div>
   </div>
 </template>
@@ -49,7 +55,8 @@ export default {
       password: '',
       user: null,
       auth: null,
-      stories: []
+      stories: [],
+      loading: true,
     }
   },
   computed: {
@@ -72,6 +79,7 @@ export default {
       } catch(err) {
         alert(err)
       }
+      this.loading = false
     },
     async submitUserForm() {
       const userToUpdate = {

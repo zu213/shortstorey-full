@@ -1,6 +1,7 @@
 <template>
     <header class="top-bar">
-      <img alt="Main logo" class="top-bar__logo" src="../assets/logo.png">
+      <router-link to="/"><img alt="Main logo" class="top-bar__logo" src="../assets/logo.png"></router-link>
+      
       
       <h1 class="top-bar__heading">
         <router-link to="/">Short Storey</router-link>

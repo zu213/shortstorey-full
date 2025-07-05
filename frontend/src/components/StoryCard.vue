@@ -74,6 +74,8 @@ export default {
   a {
     text-decoration: none;
     color: gray;
+    height: 100%;
+    display: inline-grid;
   }
 
   &__content {
@@ -87,6 +89,8 @@ export default {
   }
 
   &__footer {
+    position: relative;
+    bottom: 0;
     padding: 3px 0px;
     padding-top: 8px;
 

@@ -42,7 +42,7 @@
       </button>
     </div>
 
-     <div class="story-rating__container">
+     <div v-if="ratings.length > 0" class="story-rating__container">
       <h3>All ratings</h3>
       <div class="story-rating__rating" v-for="(rating, i) in ratings" :key="i">
         <span class="story-rating__rating-name">
