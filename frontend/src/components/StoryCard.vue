@@ -11,7 +11,7 @@
         </router-link>
         -- 
         <router-link :to="`/readrating/${story.id}`">
-          {{ story.rating ? `${story.rating * 5}/5` : 'No ratings yet'}}
+          {{ story.rating ? `${(story.rating * 5).toFixed(2)}/5` : 'No ratings yet'}}
         </router-link>
         {{ friendlyTime  }}
       </div>

@@ -2,9 +2,7 @@
   <div class="story-content" v-if="story">
     <div class="story-content__controls">
       <div v-if="!storyOwner" class="story-content__rating">
-        <router-link class="story-content__rating-link" v-if="story.rating" :to="`/readrating/${story.id}`">
-          {{story.rating * 5}}/5
-        </router-link>
+        <router-link class="story-content__rating-link" v-if="story.rating" :to="`/readrating/${story.id}`">{{(story.rating * 5).toFixed(2)}}/5</router-link>
         <span v-else>
           No ratings yet
         </span>

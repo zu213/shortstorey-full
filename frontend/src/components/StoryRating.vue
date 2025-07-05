@@ -6,7 +6,7 @@
     </div>
 
     <div class="story-rating__info" v-if="totalRating">
-      Total score: {{story.rating * 5}}/5
+      Total score: {{(story.rating * 5).toFixed(2)}}/5
     </div>
     <div class="story-rating__info" v-else>
       No ratings yet
