@@ -29,10 +29,10 @@
         </div>
       </div>
     </div>
-    <div class="story-display__none" v-if="!stories && !user && loading">
+    <div class="story-display__none" v-if="!user && loading">
       Loading...
     </div>
-    <div class="story-display__none" v-else-if="!stories && !user && !loading">
+    <div class="story-display__none" v-else-if="!user && !loading">
       Failed to load.
     </div>
   </div>
