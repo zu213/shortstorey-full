@@ -8,15 +8,16 @@
     "test": "jest --testPathPattern=test/",
     "prisma-setup": "prisma migrate dev && prisma generate",
     "prisma-format": "prisma format",
-    "prisma-local": "npx prisma studio"
+    "prisma-local": "npx prisma studio",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@fastify/cors": "^7.0.0",
-    "@prisma/client": "^3.14.0",
+    "@prisma/client": "^6.19.3",
     "bcrypt": "^6.0.0",
     "fastify": "^3.29.0",
     "jsonwebtoken": "^9.0.2",
-    "prisma": "^3.14.0",
+    "prisma": "^6.19.3",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

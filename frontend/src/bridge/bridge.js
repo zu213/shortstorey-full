@@ -1,22 +1,24 @@
 
+const BASE_URL = 'https://shortstorey-backend.vercel.app'
+
 // Stories
 
 export async function getStories(params){
-  const response = await fetch(`/stories${`?${params}` ?? ''}`)
+  const response = await fetch(`${BASE_URL}/stories${`?${params}` ?? ''}`)
   if(!response.ok) throw new Error('No Stories found')
   const json = await response.json()
   return json
 }
 
 export async function getStory(id){
-  const response = await fetch(`/stories/${id}`)
+  const response = await fetch(`${BASE_URL}/stories/${id}`)
   if(!response.ok) throw new Error(`No story with id: ${id} found`)
   const json = await response.json()
   return json
 }
 
 export async function addStory(newStory, token){
-  const response = await fetch(`/stories/create`, {
+  const response = await fetch(`${BASE_URL}/stories/create`, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -32,7 +34,7 @@ export async function addStory(newStory, token){
 }
 
 export async function deleteStory(token, id){
-  const response = await fetch(`/stories/delete/${id}`, {
+  const response = await fetch(`${BASE_URL}/stories/delete/${id}`, {
     method: 'DELETE',
     headers: {
       'Authorization': `Bearer ${token}`
@@ -47,14 +49,14 @@ export async function deleteStory(token, id){
 // Users
 
 export async function getUser(id){
-  const response = await fetch(`/user/${id}`)
+  const response = await fetch(`${BASE_URL}/user/${id}`)
   if(!response.ok) throw new Error(`No user with id: ${id} found`)
   const json = await response.json()
   return json
 }
 
 export async function updateUser(newUser, token){
-  const response = await fetch(`/user/update/${newUser.id}`, {
+  const response = await fetch(`${BASE_URL}/user/update/${newUser.id}`, {
     method: 'PUT',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -70,7 +72,7 @@ export async function updateUser(newUser, token){
 }
 
 export async function createUser(newUser){
-  const response = await fetch(`/user/create`, {
+  const response = await fetch(`${BASE_URL}/user/create`, {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -85,7 +87,7 @@ export async function createUser(newUser){
 }
 
 export async function deleteUser(token, id){
-  const response = await fetch(`/user/delete/${id}`, {
+  const response = await fetch(`${BASE_URL}/user/delete/${id}`, {
     method: 'DELETE',
     headers: {
       'Authorization': `Bearer ${token}`
@@ -101,7 +103,7 @@ export async function deleteUser(token, id){
 // login
 
 export async function attemptLogin(username, password){
-  const response = await fetch('/login', {
+  const response = await fetch(`${BASE_URL}/login`, {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -118,21 +120,21 @@ export async function attemptLogin(username, password){
 // ratings
 
 export async function getRatings(params){
-  const response = await fetch(`/rating${`?${params}` ?? ''}`)
+  const response = await fetch(`${BASE_URL}/rating${`?${params}` ?? ''}`)
   if(!response.ok) throw new Error('Failed to get ratings')
   const json = await response.json()
   return json
 }
 
 export async function checkRating(userId, storyId){
-  const response = await fetch(`/rating/${storyId}/${userId}`)
+  const response = await fetch(`${BASE_URL}/rating/${storyId}/${userId}`)
   if(!response.ok) throw new Error(`Failed to get rating`)
   const json = await response.json()
   return json
 }
 
 export async function postRating(rating, token){
-  const response = await fetch(`/rating/create`, {
+  const response = await fetch(`${BASE_URL}/rating/create`, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -148,7 +150,7 @@ export async function postRating(rating, token){
 }
 
 export async function putRating(rating, token, id){
-  const response = await fetch(`/rating/update/${id}`, {
+  const response = await fetch(`${BASE_URL}/rating/update/${id}`, {
     method: 'PUT',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -164,7 +166,7 @@ export async function putRating(rating, token, id){
 }
 
 export async function deleteRating(token, id){
-  const response = await fetch(`/rating/delete/${id}`, {
+  const response = await fetch(`${BASE_URL}/rating/delete/${id}`, {
     method: 'DELETE',
     headers: {
       'Authorization': `Bearer ${token}`
